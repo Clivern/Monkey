@@ -1,7 +1,6 @@
 <?php
 namespace Clivern\CloudStackMonkey\Util;
 
-
 /**
  * Observer Class
  *

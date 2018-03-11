@@ -14,17 +14,20 @@ class PlainRequest implements RequestInterface {
     private $items = [];
     private $headers = [];
     private $request;
+    private $type;
 
     /**
      * Class Constructor
      *
      * @param String $method     The Request Method
+     * @param String $type       The Request Type
      * @param array  $parameters The Request URL Parameters
      * @param array  $items      The Request Body Items
      */
-    public function __construct($method = null, $parameters = [], $items = [])
+    public function __construct($method = null, $type = null, $parameters = [], $items = [])
     {
         $this->method = $method;
+        $this->type = $type;
         $this->parameters = $parameters;
         $this->items = $items;
     }
@@ -33,6 +36,7 @@ class PlainRequest implements RequestInterface {
      * Set Method
      *
      * @param String $method The Request Method
+     * @return PlainRequest An instance of this class
      */
     public function setMethod($method)
     {
@@ -42,10 +46,24 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
+     * Set Type
+     *
+     * @param String $type The Request Type
+     * @return PlainRequest An instance of this class
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * Add URL Parameter
      *
      * @param String $key   The Parameter Key
      * @param String $value The Parameter Value
+     * @return PlainRequest An instance of this class
      */
     public function addParameter($key, $value)
     {
@@ -59,6 +77,7 @@ class PlainRequest implements RequestInterface {
      *
      * @param String $key  The Body Item Key
      * @param Mixed $value The Body Item Value
+     * @return PlainRequest An instance of this class
      */
     public function addItem($key, $value)
     {
@@ -72,6 +91,7 @@ class PlainRequest implements RequestInterface {
      *
      * @param String $key   The Header Item Key
      * @param String $value The Header Item Value
+     * @return PlainRequest An instance of this class
      */
     public function addHeader($key, $value)
     {
@@ -88,6 +108,16 @@ class PlainRequest implements RequestInterface {
     public function getMethod()
     {
         return $this->method;
+    }
+
+    /**
+     * Get Request Type
+     *
+     * @return String
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

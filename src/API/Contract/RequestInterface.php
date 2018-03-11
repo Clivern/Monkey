@@ -15,6 +15,11 @@ interface RequestInterface {
     public function setMethod($method);
 
     /**
+     * Set Type
+     */
+    public function setType($type);
+
+    /**
      * Add URL Parameter
      */
     public function addParameter($key, $value);
@@ -33,6 +38,11 @@ interface RequestInterface {
      * Get Request Method
      */
     public function getMethod();
+
+    /**
+     * Get Request Type
+     */
+    public function getType();
 
     /**
      * Get Request URL Parameter

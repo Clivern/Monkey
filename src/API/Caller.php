@@ -1,14 +1,14 @@
 <?php
-namespace Clivern\CloudStackMonkey\API;
+namespace Clivern\Monkey\API;
 
-use Clivern\CloudStackMonkey\API\Contract\ResponseInterface;
-use Clivern\CloudStackMonkey\API\Contract\RequestInterface;
+use Clivern\Monkey\API\Contract\ResponseInterface;
+use Clivern\Monkey\API\Contract\RequestInterface;
 
 /**
  * CloudStack API Caller Class
  *
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\API
+ * @package Clivern\Monkey\API
  */
 class Caller {
 

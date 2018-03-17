@@ -1,9 +1,9 @@
 <?php
-namespace Clivern\CloudStackMonkey\API\Request;
+namespace Clivern\Monkey\API\Request;
 
 /**
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\API\Request
+ * @package Clivern\Monkey\API\Request
  */
 class RequestType {
 

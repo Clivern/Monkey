@@ -1,11 +1,11 @@
 <?php
-namespace Clivern\CloudStackMonkey\Job;
+namespace Clivern\Monkey\Job;
 
 /**
  * Simple Job Class
  *
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\Job
+ * @package Clivern\Monkey\Job
  */
 class Simple {
 

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\API;
 
-use Clivern\CloudStackMonkey\API\Caller;
+use Clivern\Monkey\API\Caller;
 use PHPUnit\Framework\TestCase;
 
 /**

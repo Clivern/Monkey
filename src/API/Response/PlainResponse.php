@@ -1,9 +1,9 @@
 <?php
-namespace Clivern\CloudStackMonkey\API\Response;
+namespace Clivern\Monkey\API\Response;
 
 /**
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\API\Response
+ * @package Clivern\Monkey\API\Response
  */
 class PlainResponse {
 

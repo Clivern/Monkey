@@ -1,11 +1,11 @@
 <?php
-namespace Clivern\CloudStackMonkey\API\Contract;
+namespace Clivern\Monkey\API\Contract;
 
 /**
  * API Request Interface
  *
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\API\Contract
+ * @package Clivern\Monkey\API\Contract
  */
 interface RequestInterface {
 

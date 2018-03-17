@@ -1,11 +1,11 @@
 <?php
-namespace Clivern\CloudStackMonkey\Job;
+namespace Clivern\Monkey\Job;
 
 /**
  * Complex Job Class
  *
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\Job
+ * @package Clivern\Monkey\Job
  */
 class Complex {
 

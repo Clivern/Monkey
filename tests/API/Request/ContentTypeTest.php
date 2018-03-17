@@ -2,7 +2,7 @@
 namespace Tests\API\Request;
 
 use PHPUnit\Framework\TestCase;
-use Clivern\CloudStackMonkey\API\Request\ContentType;
+use Clivern\Monkey\API\Request\ContentType;
 
 /**
  * Content Type Class Test
@@ -14,7 +14,7 @@ class ContentTypeTest extends TestCase {
 
     public function testClass()
     {
-        $this->assertEquals("Clivern\CloudStackMonkey\API\Request\ContentType", get_class(new ContentType()));
+        $this->assertEquals("Clivern\Monkey\API\Request\ContentType", get_class(new ContentType()));
         $this->assertEquals("application/json", ContentType::$JSON);
     }
 }

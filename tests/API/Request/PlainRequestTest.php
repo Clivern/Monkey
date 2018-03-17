@@ -2,10 +2,10 @@
 namespace Tests\API\Request;
 
 use PHPUnit\Framework\TestCase;
-use Clivern\CloudStackMonkey\API\Request\ContentType;
-use Clivern\CloudStackMonkey\API\Request\RequestMethod;
-use Clivern\CloudStackMonkey\API\Request\RequestType;
-use Clivern\CloudStackMonkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Request\ContentType;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Request\PlainRequest;
 
 /**
  * Plain Request Class Test
@@ -17,7 +17,7 @@ class PlainRequestTest extends TestCase {
 
     public function testClass()
     {
-        $this->assertEquals("Clivern\CloudStackMonkey\API\Request\PlainRequest", get_class(new PlainRequest()));
+        $this->assertEquals("Clivern\Monkey\API\Request\PlainRequest", get_class(new PlainRequest()));
 
         $request = new PlainRequest();
         $request->setMethod(RequestMethod::$GET)

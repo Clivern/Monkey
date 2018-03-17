@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5ef72443c2bccdc07b1f8ade9a8e05a",
+    "content-hash": "99d654c86b64399b924b47c56aecf4f7",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -1583,7 +1583,7 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v4.0.5",
+            "version": "v4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",

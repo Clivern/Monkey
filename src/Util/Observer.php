@@ -1,11 +1,11 @@
 <?php
-namespace Clivern\CloudStackMonkey\Util;
+namespace Clivern\Monkey\Util;
 
 /**
  * Observer Class
  *
  * @since 1.0.0
- * @package Clivern\CloudStackMonkey\Util
+ * @package Clivern\Monkey\Util
  */
 class Observer {
 

@@ -1,10 +1,10 @@
 {
-    "name": "clivern/cloudstack-monkey",
+    "name": "clivern/monkey",
     "type": "library",
     "description": "Apache CloudStack SDK in PHP.",
-    "keywords": ["clivern", "cloudstack-monkey", "cloudstack", "apache-cloudstack", "cloudstack-api", "cloud-computing"],
+    "keywords": ["clivern", "monkey", "cloudstack", "apache-cloudstack", "cloudstack-api", "cloud-computing"],
     "license": "The Apache Software License, Version 2.0",
-    "homepage": "https://github.com/clivern/cloudstack-monkey",
+    "homepage": "https://github.com/clivern/monkey",
     "authors": [
         {
             "name": "Clivern",
@@ -22,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Clivern\\CloudStackMonkey\\": "src"
+            "Clivern\\Monkey\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Clivern\\CloudStackMonkey\\": "tests"
+            "Clivern\\Monkey\\": "tests"
         }
     },
     "scripts": {

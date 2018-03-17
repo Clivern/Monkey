@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Util;
 
-use Clivern\CloudStackMonkey\Util\Config;
+use Clivern\Monkey\Util\Config;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -28,10 +28,10 @@ class ConfigTest extends TestCase {
             "api_key" => "12345677"
         ]);
 
-        $this->assertEquals("Clivern\CloudStackMonkey\Util\Config", get_class($config));
-        $this->assertEquals("Clivern\CloudStackMonkey\Util\Config", get_class($result01));
-        $this->assertEquals("Clivern\CloudStackMonkey\Util\Config", get_class($result02));
-        $this->assertEquals("Clivern\CloudStackMonkey\Util\Config", get_class($result03));
+        $this->assertEquals("Clivern\Monkey\Util\Config", get_class($config));
+        $this->assertEquals("Clivern\Monkey\Util\Config", get_class($result01));
+        $this->assertEquals("Clivern\Monkey\Util\Config", get_class($result02));
+        $this->assertEquals("Clivern\Monkey\Util\Config", get_class($result03));
         $this->assertEquals($config->getCloudStackNodes(), [
             "cs_us_01" => ["api_key" => "12345678"],
             "cs_us_02" => ["api_key" => "12345679"],

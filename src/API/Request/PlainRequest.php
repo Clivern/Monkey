@@ -9,18 +9,18 @@ use Clivern\Monkey\API\Contract\RequestInterface;
  */
 class PlainRequest implements RequestInterface {
 
-    private $method;
-    private $parameters = [];
-    private $items = [];
-    private $headers = [];
-    private $request;
-    private $type;
+    protected $method;
+    protected $parameters = [];
+    protected $items = [];
+    protected $headers = [];
+    protected $request;
+    protected $type;
 
     /**
      * Class Constructor
      *
-     * @param String $method     The Request Method
-     * @param String $type       The Request Type
+     * @param string $method     The Request Method
+     * @param string $type       The Request Type
      * @param array  $parameters The Request URL Parameters
      * @param array  $items      The Request Body Items
      */
@@ -35,7 +35,7 @@ class PlainRequest implements RequestInterface {
     /**
      * Set Method
      *
-     * @param String $method The Request Method
+     * @param string $method The Request Method
      * @return PlainRequest An instance of this class
      */
     public function setMethod($method)
@@ -48,7 +48,7 @@ class PlainRequest implements RequestInterface {
     /**
      * Set Type
      *
-     * @param String $type The Request Type
+     * @param string $type The Request Type
      * @return PlainRequest An instance of this class
      */
     public function setType($type)
@@ -61,8 +61,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Add URL Parameter
      *
-     * @param String $key   The Parameter Key
-     * @param String $value The Parameter Value
+     * @param string $key   The Parameter Key
+     * @param string $value The Parameter Value
      * @return PlainRequest An instance of this class
      */
     public function addParameter($key, $value)
@@ -75,8 +75,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Add Request Body Item
      *
-     * @param String $key  The Body Item Key
-     * @param Mixed $value The Body Item Value
+     * @param string $key  The Body Item Key
+     * @param mixed $value The Body Item Value
      * @return PlainRequest An instance of this class
      */
     public function addItem($key, $value)
@@ -89,8 +89,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Add Header Item
      *
-     * @param String $key   The Header Item Key
-     * @param String $value The Header Item Value
+     * @param string $key   The Header Item Key
+     * @param string $value The Header Item Value
      * @return PlainRequest An instance of this class
      */
     public function addHeader($key, $value)
@@ -103,7 +103,7 @@ class PlainRequest implements RequestInterface {
     /**
      * Get Request Method
      *
-     * @return String
+     * @return string
      */
     public function getMethod()
     {
@@ -113,7 +113,7 @@ class PlainRequest implements RequestInterface {
     /**
      * Get Request Type
      *
-     * @return String
+     * @return string
      */
     public function getType()
     {
@@ -123,8 +123,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Get Request URL Parameter
      *
-     * @param String $key   The Parameter Key
-     * @return Array
+     * @param string $key   The Parameter Key
+     * @return array
      */
     public function getParameter($key)
     {
@@ -134,8 +134,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Get Request Body Item
      *
-     * @param String $key  The Body Item Key
-     * @return Array
+     * @param string $key  The Body Item Key
+     * @return mixed
      */
     public function getItem($key)
     {
@@ -143,10 +143,40 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
+     * Get Request Body Items
+     *
+     * @param  string $type The Items Format (Json or Array)
+     * @return mixed
+     */
+    public function getItems($type = "json")
+    {
+        if( $type == "json" ){
+            return json_encode($this->items);
+        }else{
+            return $this->items;
+        }
+    }
+
+    /**
+     * Get Request Body
+     *
+     * @param  string $type The Body Format (Json or Array)
+     * @return mixed
+     */
+    public function getBody($type = "json")
+    {
+        if( $type == "json" ){
+            return json_encode($this->items);
+        }else{
+            return $this->items;
+        }
+    }
+
+    /**
      * Get Request Header Item
      *
-     * @param String $key   The Header Item Key
-     * @return Array
+     * @param string $key   The Header Item Key
+     * @return array
      */
     public function getHeader($key)
     {
@@ -154,10 +184,20 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
+     * Get Headers
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
      * Check if Header Item Exists
      *
-     * @param  String $key The Header Item Key
-     * @return Boolean
+     * @param  string $key The Header Item Key
+     * @return boolean
      */
     public function headerExists($key)
     {
@@ -167,8 +207,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Check if URL Parameter Exists
      *
-     * @param  String $key The URL Parameter Key
-     * @return Boolean
+     * @param  string $key The URL Parameter Key
+     * @return boolean
      */
     public function parameterExists($key)
     {
@@ -178,8 +218,8 @@ class PlainRequest implements RequestInterface {
     /**
      * Check if Body Item Exists
      *
-     * @param  String $key The Body Item Key
-     * @return Boolean
+     * @param  string $key The Body Item Key
+     * @return boolean
      */
     public function itemExists($key)
     {
@@ -189,7 +229,7 @@ class PlainRequest implements RequestInterface {
     /**
      * Debug The Request Object
      *
-     * @return String
+     * @return string
      */
     public function debug()
     {

@@ -55,9 +55,24 @@ interface RequestInterface {
     public function getItem($key);
 
     /**
+     * Get Request Body Items
+     */
+    public function getItems($type = "json");
+
+    /**
+     * Get Request Body
+     */
+    public function getBody($type = "json");
+
+    /**
      * Get Request Header Item
      */
     public function getHeader($key);
+
+    /**
+     * Get Headers
+     */
+    public function getHeaders();
 
     /**
      * Check if Header Item Exists
@@ -78,5 +93,4 @@ interface RequestInterface {
      * Debug The Request Object
      */
     public function debug();
-
 }

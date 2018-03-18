@@ -177,8 +177,8 @@ class Caller {
             "status" => $this->status,
             "ident" => $this->ident,
             "nodeUrl" => $this->nodeUrl,
-            "response" => $this->response->dump("array"),
-            "request" => $this->request->dump("array")
+            "response" => $this->response->dump(DumpType::$ARRAY),
+            "request" => $this->request->dump(DumpType::$ARRAY)
         ];
         return ($type == DumpType::$JSON) ? json_encode($data) : $data;
     }

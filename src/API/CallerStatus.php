@@ -8,7 +8,7 @@ namespace Clivern\Monkey\API;
 class CallerStatus {
 
 	public static $PENDING = "PENDING";
-	public static $ASYCJOB = "ASYCJOB";
+	public static $IN_PROGRESS = "IN_PROGRESS";
 	public static $FINISHED = "FINISHED";
 
 }

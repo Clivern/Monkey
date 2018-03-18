@@ -2,6 +2,7 @@
 namespace Clivern\Monkey\API\Response;
 
 use Clivern\Monkey\API\Contract\ResponseInterface;
+use Clivern\Monkey\API\DumpType;
 
 /**
  * @since 1.0.0
@@ -9,7 +10,6 @@ use Clivern\Monkey\API\Contract\ResponseInterface;
  */
 class PlainResponse implements ResponseInterface {
 
-    protected $rawResponse;
     protected $response;
     protected $statusCode;
     protected $callback;
@@ -20,32 +20,12 @@ class PlainResponse implements ResponseInterface {
      *
      * @param mixed $callback The response callback
      */
-    public function __construct($callback = null)
+    public function __construct($callbackMethod = null, $callbackArguments = [])
     {
-        $this->callback = $callback;
-    }
-
-    /**
-     * Set The Raw Response
-     *
-     * @param string $rawResponse the raw response
-     * @return PlainResponse
-     */
-    public function setRawResponse($rawResponse)
-    {
-        $this->rawResponse = $rawResponse;
-
-        return $this;
-    }
-
-    /**
-     * Get The Raw Response
-     *
-     * @return PlainResponse
-     */
-    public function getRawResponse()
-    {
-        return $this->rawResponse;
+        $this->callback = [
+            "method" => $callbackMethod,
+            "arguments" => $callbackArguments
+        ];
     }
 
     /**
@@ -125,9 +105,12 @@ class PlainResponse implements ResponseInterface {
      * @param mixed $callback the response callback
      * @return PlainResponse
      */
-    public function setCallback($callback)
+    public function setCallback($callbackMethod = null, $callbackArguments = [])
     {
-        $this->callback = $callback;
+        $this->callback = [
+            "method" => $callbackMethod,
+            "arguments" => $callbackArguments
+        ];
 
         return $this;
     }
@@ -140,5 +123,37 @@ class PlainResponse implements ResponseInterface {
     public function getCallback()
     {
         return $this->callback;
+    }
+
+    /**
+     * Dump The PlainResponse Instance Data
+     *
+     * @param  string $type the type of data
+     * @return mixed
+     */
+    public function dump($type)
+    {
+        $data = [
+            "response" => $this->response,
+            "statusCode" => $this->statusCode,
+            "callback" => $this->callback,
+            "items" => $this->items
+        ];
+        return ($type == DumpType::$JSON) ? json_encode($data) : $data;
+    }
+
+    /**
+     * Reload The PlainResponse Instance Data
+     *
+     * @param  mixed  $data The PlainResponse Instance Data
+     * @param  string $type the type of data
+     */
+    public function reload($data, $type)
+    {
+        $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
+        $this->response = $data["response"];
+        $this->statusCode = $data["statusCode"];
+        $this->callback = $data["callback"];
+        $this->items = $data["items"];
     }
 }

@@ -5,6 +5,7 @@ use Clivern\Monkey\API\Contract\ResponseInterface;
 use Clivern\Monkey\API\Contract\RequestInterface;
 use Clivern\Monkey\API\CallerStatus;
 use GuzzleHttp\Client;
+use Clivern\Monkey\API\DumpType;
 
 /**
  * CloudStack API Caller Class
@@ -21,16 +22,17 @@ class Caller {
     protected $request;
     protected $status;
     protected $shared = [];
+    protected $retry = 0;
 
     /**
      * Class Constructor
      *
-     * @param string            $ident    The Caller Ident
-     * @param string            $nodeUrl  The CloudStack Node URL
      * @param RequestInterface  $request  The Request Object
      * @param ResponseInterface $response The Response Object
+     * @param string            $ident    The Caller Ident
+     * @param string            $nodeUrl  The CloudStack Node URL
      */
-    public function __construct($ident, $nodeUrl, RequestInterface $request, ResponseInterface $response)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $nodeUrl = null)
     {
         $this->ident = $ident;
         $this->nodeUrl = $nodeUrl;
@@ -47,16 +49,20 @@ class Caller {
      */
     public function execute()
     {
+        $this->status = CallerStatus::$IN_PROGRESS;
+        $this->retry += 1;
+
         $response = $this->client->request($this->request->getMethod(), $this->nodeUrl, [
             'headers' => $this->request->getHeaders(),
-            'body' => $this->request->getBody()
+            'body' => $this->request->getBody(DumpType::$JSON)
         ]);
 
-        $this->response->setRawResponse($response->getBody())
-                        ->setResponse(json_decode($response->getBody()))
+
+        $this->response->setResponse(json_decode($response->getBody(), true))
                         ->setStatusCode($response->getStatusCode());
 
-        call_user_func($this->response->getCallback(), $this);
+        $callback = $this->response->getCallback();
+        call_user_func_array($callback["method"], [$this, $callback["arguments"]]);
 
         return $this;
     }
@@ -155,5 +161,44 @@ class Caller {
     public function itemExists($key)
     {
         return (isset($this->shared[$key]));
+    }
+
+    /**
+     * Dump The Caller Instance Data
+     *
+     * @param  string $type the type of data
+     * @return mixed
+     */
+    public function dump($type)
+    {
+        $data = [
+            "retry" => $this->retry,
+            "shared" => $this->shared,
+            "status" => $this->status,
+            "ident" => $this->ident,
+            "nodeUrl" => $this->nodeUrl,
+            "response" => $this->response->dump("array"),
+            "request" => $this->request->dump("array")
+        ];
+        return ($type == DumpType::$JSON) ? json_encode($data) : $data;
+    }
+
+    /**
+     * Reload The Caller Instance Data
+     *
+     * @param  mixed  $data The Caller Instance Data
+     * @param  string $type the type of data
+     */
+    public function reload($data, $type)
+    {
+        $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
+
+        $this->retry = $data["retry"];
+        $this->shared = $data["shared"];
+        $this->status = $data["status"];
+        $this->ident = $data["ident"];
+        $this->nodeUrl = $data["nodeUrl"];
+        $this->response->reload($data["response"], DumpType::$ARRAY);
+        $this->request->reload($data["request"], DumpType::$ARRAY);
     }
 }

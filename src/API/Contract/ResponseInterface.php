@@ -10,16 +10,6 @@ namespace Clivern\Monkey\API\Contract;
 interface ResponseInterface {
 
     /**
-     * Set The Raw Response
-     */
-    public function setRawResponse($rawResponse);
-
-    /**
-     * Get The Raw Response
-     */
-    public function getRawResponse();
-
-    /**
      * Get Response As Array
      */
     public function getResponse();
@@ -52,10 +42,20 @@ interface ResponseInterface {
     /**
      * Set Callback
      */
-    public function setCallback($callback);
+    public function setCallback($callbackMethod = null, $callbackArguments = []);
 
     /**
      * Get Callback
      */
     public function getCallback();
+
+    /**
+     * Dump The PlainResponse Instance Data
+     */
+    public function dump($type);
+
+    /**
+     * Reload The PlainResponse Instance Data
+     */
+    public function reload($data, $type);
 }

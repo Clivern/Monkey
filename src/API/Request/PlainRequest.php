@@ -2,6 +2,7 @@
 namespace Clivern\Monkey\API\Request;
 
 use Clivern\Monkey\API\Contract\RequestInterface;
+use Clivern\Monkey\API\DumpType;
 
 /**
  * @since 1.0.0
@@ -13,7 +14,6 @@ class PlainRequest implements RequestInterface {
     protected $parameters = [];
     protected $items = [];
     protected $headers = [];
-    protected $request;
     protected $type;
 
     /**
@@ -24,11 +24,12 @@ class PlainRequest implements RequestInterface {
      * @param array  $parameters The Request URL Parameters
      * @param array  $items      The Request Body Items
      */
-    public function __construct($method = null, $type = null, $parameters = [], $items = [])
+    public function __construct($method = null, $type = null, $parameters = [], $headers = [], $items = [])
     {
         $this->method = $method;
         $this->type = $type;
         $this->parameters = $parameters;
+        $this->headers = $headers;
         $this->items = $items;
     }
 
@@ -148,9 +149,9 @@ class PlainRequest implements RequestInterface {
      * @param  string $type The Items Format (Json or Array)
      * @return mixed
      */
-    public function getItems($type = "json")
+    public function getItems($type)
     {
-        if( $type == "json" ){
+        if( $type == DumpType::$JSON ){
             return json_encode($this->items);
         }else{
             return $this->items;
@@ -163,9 +164,9 @@ class PlainRequest implements RequestInterface {
      * @param  string $type The Body Format (Json or Array)
      * @return mixed
      */
-    public function getBody($type = "json")
+    public function getBody($type)
     {
-        if( $type == "json" ){
+        if( $type == DumpType::$JSON ){
             return json_encode($this->items);
         }else{
             return $this->items;
@@ -241,5 +242,39 @@ class PlainRequest implements RequestInterface {
         }
 
         return "curl -X {$this->method} " . trim($headers) . " -d '{$body}'" . " \"{$url}\"";
+    }
+
+    /**
+     * Dump The PlainRequest Instance Data
+     *
+     * @param  string $type the type of data
+     * @return mixed
+     */
+    public function dump($type)
+    {
+        $data = [
+            "method" => $this->method,
+            "parameters" => $this->parameters,
+            "items" => $this->items,
+            "headers" => $this->headers,
+            "type" => $this->type
+        ];
+        return ($type == DumpType::$JSON) ? json_encode($data) : $data;
+    }
+
+    /**
+     * Reload The PlainRequest Instance Data
+     *
+     * @param  mixed  $data The PlainRequest Instance Data
+     * @param  string $type the type of data
+     */
+    public function reload($data, $type)
+    {
+        $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
+        $this->method = $data["method"];
+        $this->parameters = $data["parameters"];
+        $this->items = $data["items"];
+        $this->headers = $data["headers"];
+        $this->type = $data["type"];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Clivern\Monkey\API\Contract;
+use Clivern\Monkey\API\DumpType;
 
 /**
  * API Request Interface
@@ -57,12 +58,12 @@ interface RequestInterface {
     /**
      * Get Request Body Items
      */
-    public function getItems($type = "json");
+    public function getItems($type);
 
     /**
      * Get Request Body
      */
-    public function getBody($type = "json");
+    public function getBody($type);
 
     /**
      * Get Request Header Item
@@ -93,4 +94,14 @@ interface RequestInterface {
      * Debug The Request Object
      */
     public function debug();
+
+    /**
+     * Dump The PlainRequest Instance Data
+     */
+    public function dump($type);
+
+    /**
+     * Reload The PlainRequest Instance Data
+     */
+    public function reload($data, $type);
 }

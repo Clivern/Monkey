@@ -7,7 +7,7 @@ namespace Clivern\Monkey\API;
  */
 class DumpType {
 
-	public static $ARRAY = "ARRAY";
-	public static $JSON = "JSON";
+    public static $ARRAY = "ARRAY";
+    public static $JSON = "JSON";
 
 }

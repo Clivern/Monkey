@@ -7,9 +7,9 @@ namespace Clivern\Monkey\API;
  */
 class JobStatus {
 
-	public static $PENDING = "PENDING";
-	public static $IN_PROGRESS = "IN_PROGRESS";
-	public static $FAILED = "FAILED";
-	public static $FINISHED = "FINISHED";
+    public static $PENDING = "PENDING";
+    public static $IN_PROGRESS = "IN_PROGRESS";
+    public static $FAILED = "FAILED";
+    public static $FINISHED = "FINISHED";
 
 }

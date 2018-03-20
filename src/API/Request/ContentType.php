@@ -7,6 +7,6 @@ namespace Clivern\Monkey\API\Request;
  */
 class ContentType {
 
-	public static $JSON = "application/json";
+    public static $JSON = "application/json";
 
 }

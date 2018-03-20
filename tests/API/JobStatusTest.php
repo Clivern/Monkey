@@ -14,10 +14,10 @@ class JobStatusTest extends TestCase {
 
     public function testConstants()
     {
-    	$this->assertEquals("Clivern\Monkey\API\JobStatus", get_class(new JobStatus()));
-		$this->assertEquals(JobStatus::$PENDING, "PENDING");
-		$this->assertEquals(JobStatus::$IN_PROGRESS, "IN_PROGRESS");
-		$this->assertEquals(JobStatus::$FAILED, "FAILED");
-		$this->assertEquals(JobStatus::$FINISHED, "FINISHED");
+        $this->assertEquals("Clivern\Monkey\API\JobStatus", get_class(new JobStatus()));
+        $this->assertEquals(JobStatus::$PENDING, "PENDING");
+        $this->assertEquals(JobStatus::$IN_PROGRESS, "IN_PROGRESS");
+        $this->assertEquals(JobStatus::$FAILED, "FAILED");
+        $this->assertEquals(JobStatus::$FINISHED, "FINISHED");
     }
 }

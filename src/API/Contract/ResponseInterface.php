@@ -20,14 +20,14 @@ interface ResponseInterface {
     public function setResponse($response);
 
     /**
-     * Set Status Code
+     * Get Async Job As Array
      */
-    public function setStatusCode($statusCode);
+    public function getAsyncJob();
 
     /**
-     * Get Status Code
+     * Set Async Job As Array
      */
-    public function getStatusCode();
+    public function setAsyncJob($asyncJob);
 
     /**
      * Add Response Item

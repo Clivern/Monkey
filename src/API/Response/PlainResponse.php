@@ -10,10 +10,13 @@ use Clivern\Monkey\API\DumpType;
  */
 class PlainResponse implements ResponseInterface {
 
-    protected $response;
-    protected $statusCode;
-    protected $callback;
-    protected $items;
+    protected $response = [];
+    protected $asyncJob = [];
+    protected $callback = [
+        "method" => null,
+        "arguments" => null
+    ];
+    protected $items = [];
 
     /**
      * Class Constructor
@@ -31,7 +34,7 @@ class PlainResponse implements ResponseInterface {
     /**
      * Get Response As Array
      *
-     * @return PlainResponse
+     * @return array
      */
     public function getResponse()
     {
@@ -52,26 +55,26 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
-     * Set Status Code
+     * Get Async Job As Array
      *
-     * @param integer $statusCode the response status code
-     * @return PlainResponse
+     * @return array The Async Job Data
      */
-    public function setStatusCode($statusCode)
+    public function getAsyncJob()
     {
-        $this->statusCode = $statusCode;
-
-        return $this;
+        return $this->asyncJob;
     }
 
     /**
-     * Get Status Code
+     * Set Async Job As Array
      *
-     * @return Integer The Status Code
+     * @param array $asyncJob The Async Job Data
+     * @return PlainResponse
      */
-    public function getStatusCode()
+    public function setAsyncJob($asyncJob)
     {
-        return $this->statusCode;
+        $this->asyncJob = $asyncJob;
+
+        return $this;
     }
 
     /**
@@ -102,7 +105,8 @@ class PlainResponse implements ResponseInterface {
     /**
      * Set Callback
      *
-     * @param mixed $callback the response callback
+     * @param string $callbackMethod    the callback method
+     * @param array  $callbackArguments the callback arguments
      * @return PlainResponse
      */
     public function setCallback($callbackMethod = null, $callbackArguments = [])
@@ -118,7 +122,7 @@ class PlainResponse implements ResponseInterface {
     /**
      * Get Callback
      *
-     * @return mixed the response callback
+     * @return array the response callback
      */
     public function getCallback()
     {
@@ -135,7 +139,7 @@ class PlainResponse implements ResponseInterface {
     {
         $data = [
             "response" => $this->response,
-            "statusCode" => $this->statusCode,
+            "asyncJob" => $this->asyncJob,
             "callback" => $this->callback,
             "items" => $this->items
         ];
@@ -152,8 +156,8 @@ class PlainResponse implements ResponseInterface {
     {
         $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
         $this->response = $data["response"];
-        $this->statusCode = $data["statusCode"];
         $this->callback = $data["callback"];
         $this->items = $data["items"];
+        $this->asyncJob = $data["asyncJob"];
     }
 }

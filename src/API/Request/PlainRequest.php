@@ -235,7 +235,10 @@ class PlainRequest implements RequestInterface {
     public function debug()
     {
         $body = json_encode($this->items);
-        $url = "https://example.com?" . http_build_query($this->parameters);
+        $query = http_build_query($this->parameters);
+        $query = urldecode($query);
+        $query = str_replace("+", "%20", $query);
+        $url = "https://example.com?" . $query;
         $headers = "";
         foreach ($this->headers as $key => $value) {
             $headers .= " -H \"{$key}: {$value}\"";

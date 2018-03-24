@@ -18,8 +18,8 @@ class Caller {
 
     protected $client;
     protected $ident;
-    protected $nodeData = [
-        "nodeUrl"   => "",
+    protected $apiData = [
+        "apiUrl"   => "",
         "apiKey"    => "",
         "secretKey" => "",
         "ssoEnabled" => false,
@@ -41,18 +41,17 @@ class Caller {
      * @param RequestInterface  $request  The Request Object
      * @param ResponseInterface $response The Response Object
      * @param string            $ident    The Caller Ident
-     * @param string            $nodeData  The CloudStack Node URL
+     * @param string            $apiData  The CloudStack Node URL
      */
-    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $nodeData = [], $retryLimit = 1)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $apiData = [], $retryLimit = 1)
     {
         $this->ident = $ident;
-        $this->nodeData = array_merge($this->nodeData, $nodeData);
+        $this->apiData = array_merge($this->apiData, $apiData);
         $this->request = $request;
         $this->response = $response;
         $this->retryLimit = $retryLimit;
         $this->client = new Client();
-
-        $this->request->addParameter("apiKey", $nodeData["apiKey"]);
+        $this->request->addParameter("apiKey", $apiData["apiKey"]);
         $this->status = CallerStatus::$PENDING;
     }
 
@@ -135,39 +134,24 @@ class Caller {
         return $this;
     }
 
-    protected function executeAsyncCall(){}
-
-    protected function chechAsyncCall(){}
+    /**
+     * Execute Async Call
+     *
+     * @return Caller
+     */
+    protected function executeAsyncCall()
+    {
+        #~
+    }
 
     /**
-     * Get Request URL
+     * Check Async Call
      *
-     * @return string
+     * @return Caller
      */
-    protected function getUrl()
+    protected function chechAsyncCall()
     {
-        $parameters = $this->request->getParameters();
-
-        if ($this->nodeData["ssoEnabled"] && empty($this->nodeData["ssoKey"])) {
-            throw new \InvalidArgumentException(
-                'Required options not defined: ssoKey'
-            );
-        }
-        ksort($parameters);
-
-        $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);
-        $key = $this->nodeData["ssoEnabled"] ? $this->nodeData["ssoKey"] : $this->nodeData["secretKey"];
-
-        $signature = rawurlencode(base64_encode(hash_hmac(
-            'SHA1',
-            strtolower($query),
-            $key,
-            true
-        )));
-
-        $query = trim($query . '&signature=' . $signature, '?&');
-
-        return $this->nodeData["nodeUrl"] . '?' . $query;
+        #~
     }
 
     /**
@@ -286,10 +270,11 @@ class Caller {
     {
         $data = [
             "retry" => $this->retry,
+            "retryLimit" => $this->retryLimit,
             "shared" => $this->shared,
             "status" => $this->status,
             "ident" => $this->ident,
-            "nodeData" => $this->nodeData,
+            "apiData" => $this->apiData,
             "asyncJob" => $this->asyncJob,
             "asyncJobCommand" => $this->asyncJobCommand,
             "response" => $this->response->dump(DumpType::$ARRAY),
@@ -309,13 +294,45 @@ class Caller {
         $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
 
         $this->retry = $data["retry"];
+        $this->retryLimit = $data["retryLimit"];
         $this->shared = $data["shared"];
         $this->status = $data["status"];
         $this->ident = $data["ident"];
-        $this->nodeData = $data["nodeData"];
+        $this->apiData = $data["apiData"];
         $this->asyncJob = $data["asyncJob"];
         $this->asyncJobCommand = $data["asyncJobCommand"];
         $this->response->reload($data["response"], DumpType::$ARRAY);
         $this->request->reload($data["request"], DumpType::$ARRAY);
+    }
+
+    /**
+     * Get Request URL
+     *
+     * @return string
+     */
+    protected function getUrl()
+    {
+        $parameters = $this->request->getParameters();
+
+        if ($this->apiData["ssoEnabled"] && empty($this->apiData["ssoKey"])) {
+            throw new \InvalidArgumentException(
+                'Required options not defined: ssoKey'
+            );
+        }
+        ksort($parameters);
+
+        $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);
+        $key = $this->apiData["ssoEnabled"] ? $this->apiData["ssoKey"] : $this->apiData["secretKey"];
+
+        $signature = rawurlencode(base64_encode(hash_hmac(
+            'SHA1',
+            strtolower($query),
+            $key,
+            true
+        )));
+
+        $query = trim($query . '&signature=' . $signature, '?&');
+
+        return $this->apiData["apiUrl"] . '?' . $query;
     }
 }

@@ -7,6 +7,7 @@ use Clivern\Monkey\API\CallerStatus;
 use GuzzleHttp\Client;
 use Clivern\Monkey\API\DumpType;
 use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Request\ResponseType;
 
 /**
  * CloudStack API Caller Class
@@ -32,8 +33,6 @@ class Caller {
     protected $shared = [];
     protected $retry = 0;
     protected $retryLimit = 1;
-    protected $asyncJob = [];
-    protected $asyncJobCommand = "command=queryAsyncJobResult&jobId={jobId}";
 
     /**
      * Class Constructor
@@ -51,7 +50,7 @@ class Caller {
         $this->response = $response;
         $this->retryLimit = $retryLimit;
         $this->client = new Client();
-        $this->request->addParameter("apiKey", $apiData["apiKey"]);
+        $this->request->addParameter("apiKey", (isset($apiData["apiKey"])) ? $apiData["apiKey"] : "");
         $this->status = CallerStatus::$PENDING;
     }
 
@@ -202,7 +201,49 @@ class Caller {
      */
     protected function chechAsyncCall()
     {
-        #~
+        $this->retry += 1;
+        $status = true;
+
+        try {
+            $response = $this->client->request($this->request->getMethod(), $this->getJobUrl($this->response->getAsyncJobId()), [
+                'headers' => $this->request->getHeaders(),
+                'body' => $this->request->getBody(DumpType::$JSON)
+            ]);
+        } catch (\Exception $e) {
+
+            $status = false;
+            $parsedError = !empty((String) $e->getResponse()->getBody(true)) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
+            $errorCode = "M100";
+            $errorMessage = "Error! Something Unexpected Happened.";
+
+            foreach ($parsedError as $error_data) {
+                $errorCode = (isset($error_data["errorcode"])) ? $error_data["errorcode"] : $errorCode;
+                $errorMessage = (isset($error_data["errortext"])) ? $error_data["errortext"] : $errorMessage;
+            }
+
+            $this->response->setError([
+                "parsed" => $parsedError,
+                "plain" => $e->getMessage(),
+                "code" => $errorCode,
+                "message" => $errorMessage
+            ]);
+        }
+
+        if ($status) {
+            $this->status = CallerStatus::$SUCCEEDED;
+            $this->response->setResponse(json_decode((string) $response->getBody(), true));
+        } else {
+            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
+            $this->response->setResponse([]);
+        }
+
+        $callback = $this->response->getCallback();
+
+        if (!empty($callback["method"])) {
+            call_user_func_array($callback["method"], [$this, $callback["arguments"]]);
+        }
+
+        return $this;
     }
 
     /**
@@ -326,8 +367,6 @@ class Caller {
             "status" => $this->status,
             "ident" => $this->ident,
             "apiData" => $this->apiData,
-            "asyncJob" => $this->asyncJob,
-            "asyncJobCommand" => $this->asyncJobCommand,
             "response" => $this->response->dump(DumpType::$ARRAY),
             "request" => $this->request->dump(DumpType::$ARRAY)
         ];
@@ -350,8 +389,6 @@ class Caller {
         $this->status = $data["status"];
         $this->ident = $data["ident"];
         $this->apiData = $data["apiData"];
-        $this->asyncJob = $data["asyncJob"];
-        $this->asyncJobCommand = $data["asyncJobCommand"];
         $this->response->reload($data["response"], DumpType::$ARRAY);
         $this->request->reload($data["request"], DumpType::$ARRAY);
     }
@@ -364,6 +401,42 @@ class Caller {
     protected function getUrl()
     {
         $parameters = $this->request->getParameters();
+
+        if ($this->apiData["ssoEnabled"] && empty($this->apiData["ssoKey"])) {
+            throw new \InvalidArgumentException(
+                'Required options not defined: ssoKey'
+            );
+        }
+        ksort($parameters);
+
+        $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);
+        $key = $this->apiData["ssoEnabled"] ? $this->apiData["ssoKey"] : $this->apiData["secretKey"];
+
+        $signature = rawurlencode(base64_encode(hash_hmac(
+            'SHA1',
+            strtolower($query),
+            $key,
+            true
+        )));
+
+        $query = trim($query . '&signature=' . $signature, '?&');
+
+        return $this->apiData["apiUrl"] . '?' . $query;
+    }
+
+    /**
+     * Get Job URL
+     *
+     * @return string
+     */
+    protected function getJobUrl($jobId)
+    {
+        $parameters = [
+            "response"  => ResponseType::$JSON,
+            "apiKey"    => $this->apiData["apiKey"],
+            "command"   => "queryAsyncJobResult",
+            "jobId"     => $jobId
+        ];
 
         if ($this->apiData["ssoEnabled"] && empty($this->apiData["ssoKey"])) {
             throw new \InvalidArgumentException(

@@ -17,6 +17,7 @@ class PlainResponse implements ResponseInterface {
         "arguments" => null
     ];
     protected $items = [];
+    protected $error = [];
 
     /**
      * Class Constructor
@@ -75,6 +76,66 @@ class PlainResponse implements ResponseInterface {
         $this->asyncJob = $asyncJob;
 
         return $this;
+    }
+
+    /**
+     * Set Error
+     *
+     * @param array $error The Returned Error
+     */
+    public function setError($error)
+    {
+        $this->error = $error;
+    }
+
+    /**
+     * Get The Error
+     *
+     * @return array
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * Get Error As String
+     *
+     * @return String
+     */
+    public function getPlainError()
+    {
+        return $this->error["plain"];
+    }
+
+    /**
+     * Get Parsed Error
+     *
+     * @return array
+     */
+    public function getParsedError()
+    {
+        return $this->error["parsed"];
+    }
+
+    /**
+     * Get Error Code
+     *
+     * @return mixed
+     */
+    public function getErrorCode()
+    {
+        return $this->error["code"];
+    }
+
+    /**
+     * Get Error Message
+     *
+     * @return string
+     */
+    public function getErrorMessage()
+    {
+        return $this->error["message"];
     }
 
     /**
@@ -141,7 +202,8 @@ class PlainResponse implements ResponseInterface {
             "response" => $this->response,
             "asyncJob" => $this->asyncJob,
             "callback" => $this->callback,
-            "items" => $this->items
+            "items" => $this->items,
+            "error" => $this->error
         ];
         return ($type == DumpType::$JSON) ? json_encode($data) : $data;
     }
@@ -159,5 +221,6 @@ class PlainResponse implements ResponseInterface {
         $this->callback = $data["callback"];
         $this->items = $data["items"];
         $this->asyncJob = $data["asyncJob"];
+        $this->error = $data["error"];
     }
 }

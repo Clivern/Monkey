@@ -10,24 +10,54 @@ namespace Clivern\Monkey\API\Contract;
 interface ResponseInterface {
 
     /**
-     * Get Response As Array
+     * Get Response
      */
     public function getResponse();
 
     /**
-     * Set Response As Array
+     * Set Response
      */
     public function setResponse($response);
 
     /**
-     * Get Async Job As Array
+     * Get Async Job
      */
     public function getAsyncJob();
 
     /**
-     * Set Async Job As Array
+     * Set Async Job
      */
     public function setAsyncJob($asyncJob);
+
+    /**
+     * Set Error
+     */
+    public function setError($error);
+
+    /**
+     * Get The Error
+     */
+    public function getError();
+
+    /**
+     * Get Error As String
+     */
+    public function getPlainError();
+
+    /**
+     * Get Parsed Error
+     */
+    public function getParsedError();
+
+    /**
+     * Get Error Code
+     */
+    public function getErrorCode();
+
+    /**
+     * Get Error Message
+     */
+    public function getErrorMessage();
 
     /**
      * Add Response Item

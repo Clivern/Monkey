@@ -76,6 +76,11 @@ interface RequestInterface {
     public function getHeaders();
 
     /**
+     * Get Parameters
+     */
+    public function getParameters();
+
+    /**
      * Check if Header Item Exists
      */
     public function headerExists($key);

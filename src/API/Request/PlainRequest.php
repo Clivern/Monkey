@@ -3,6 +3,7 @@ namespace Clivern\Monkey\API\Request;
 
 use Clivern\Monkey\API\Contract\RequestInterface;
 use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Request\ResponseType;
 
 /**
  * @since 1.0.0
@@ -192,6 +193,20 @@ class PlainRequest implements RequestInterface {
     public function getHeaders()
     {
         return $this->headers;
+    }
+
+    /**
+     * Get Parameters
+     *
+     * @return array
+     */
+    public function getParameters()
+    {
+        if( !isset($this->parameters["response"]) ){
+            $this->parameters["response"] = ResponseType::$JSON;
+        }
+
+        return $this->parameters;
     }
 
     /**

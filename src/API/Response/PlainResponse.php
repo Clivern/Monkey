@@ -12,6 +12,7 @@ class PlainResponse implements ResponseInterface {
 
     protected $response = [];
     protected $asyncJob = [];
+    protected $asyncJobId = "";
     protected $callback = [
         "method" => null,
         "arguments" => null
@@ -81,6 +82,29 @@ class PlainResponse implements ResponseInterface {
         $this->asyncJob = $asyncJob;
 
         return $this;
+    }
+
+    /**
+     * Set Async Job Id
+     *
+     * @param string $asyncJobId
+     * @return PlainResponse
+     */
+    public function setAsyncJobId($asyncJobId)
+    {
+        $this->asyncJobId = $asyncJobId;
+
+        return $this;
+    }
+
+    /**
+     * Get Async Job Id
+     *
+     * @return string
+     */
+    public function getAsyncJobId()
+    {
+        return $this->asyncJobId;
     }
 
     /**
@@ -206,6 +230,7 @@ class PlainResponse implements ResponseInterface {
         $data = [
             "response" => $this->response,
             "asyncJob" => $this->asyncJob,
+            "asyncJobId" => $this->asyncJobId,
             "callback" => $this->callback,
             "items" => $this->items,
             "error" => $this->error
@@ -226,6 +251,7 @@ class PlainResponse implements ResponseInterface {
         $this->callback = $data["callback"];
         $this->items = $data["items"];
         $this->asyncJob = $data["asyncJob"];
+        $this->asyncJobId = $data["asyncJobId"];
         $this->error = $data["error"];
     }
 }

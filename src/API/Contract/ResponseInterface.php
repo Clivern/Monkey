@@ -30,6 +30,16 @@ interface ResponseInterface {
     public function setAsyncJob($asyncJob);
 
     /**
+     * Set Async Job Id
+     */
+    public function setAsyncJobId($asyncJobId);
+
+    /**
+     * Get Async Job Id
+     */
+    public function getAsyncJobId();
+
+    /**
      * Set Error
      */
     public function setError($error);

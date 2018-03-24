@@ -118,7 +118,7 @@ class Caller {
         }
 
         if ($status) {
-            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$SUCCEEDED : CallerStatus::$IN_PROGRESS;
+            $this->status = CallerStatus::$SUCCEEDED;
             $this->response->setResponse(json_decode((string) $response->getBody(), true));
         } else {
             $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
@@ -141,7 +141,58 @@ class Caller {
      */
     protected function executeAsyncCall()
     {
-        #~
+        $this->status = CallerStatus::$IN_PROGRESS;
+        $this->retry += 1;
+        $status = true;
+
+        try {
+            $response = $this->client->request($this->request->getMethod(), $this->getUrl(), [
+                'headers' => $this->request->getHeaders(),
+                'body' => $this->request->getBody(DumpType::$JSON)
+            ]);
+        } catch (\Exception $e) {
+
+            $status = false;
+            $parsedError = !empty((String) $e->getResponse()->getBody(true)) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
+            $errorCode = "M100";
+            $errorMessage = "Error! Something Unexpected Happened.";
+
+            foreach ($parsedError as $error_data) {
+                $errorCode = (isset($error_data["errorcode"])) ? $error_data["errorcode"] : $errorCode;
+                $errorMessage = (isset($error_data["errortext"])) ? $error_data["errortext"] : $errorMessage;
+            }
+
+            $this->response->setError([
+                "parsed" => $parsedError,
+                "plain" => $e->getMessage(),
+                "code" => $errorCode,
+                "message" => $errorMessage
+            ]);
+        }
+
+        if ($status) {
+            $this->status = CallerStatus::$ASYNC_JOB;
+
+            $asyncJob = json_decode((string) $response->getBody(), true);
+            $asyncJobId = "";
+
+            foreach ($asyncJob as $asyncJobData) {
+                $asyncJobId = $asyncJobData["jobid"];
+            }
+
+            $this->response->setAsyncJob($asyncJob)->setAsyncJobId($asyncJobId);
+        } else {
+            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
+            $this->response->setAsyncJob([]);
+        }
+
+        $callback = $this->response->getCallback();
+
+        if (!empty($callback["method"])) {
+            call_user_func_array($callback["method"], [$this, $callback["arguments"]]);
+        }
+
+        return $this;
     }
 
     /**

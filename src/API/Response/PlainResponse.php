@@ -17,7 +17,12 @@ class PlainResponse implements ResponseInterface {
         "arguments" => null
     ];
     protected $items = [];
-    protected $error = [];
+    protected $error = [
+        "parsed" => [],
+        "plain" => "",
+        "code" => "",
+        "message" => ""
+    ];
 
     /**
      * Class Constructor

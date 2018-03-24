@@ -7,7 +7,7 @@ namespace Clivern\Monkey\API\Request;
  */
 class RequestType {
 
-	public static $ASYNCHRONOUS = "ASYNCHRONOUS";
-	public static $SYNCHRONOUS = "SYNCHRONOUS";
+    public static $ASYNCHRONOUS = "ASYNCHRONOUS";
+    public static $SYNCHRONOUS = "SYNCHRONOUS";
 
 }

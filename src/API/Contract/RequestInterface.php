@@ -1,5 +1,6 @@
 <?php
 namespace Clivern\Monkey\API\Contract;
+use Clivern\Monkey\API\DumpType;
 
 /**
  * API Request Interface
@@ -55,9 +56,29 @@ interface RequestInterface {
     public function getItem($key);
 
     /**
+     * Get Request Body Items
+     */
+    public function getItems($type);
+
+    /**
+     * Get Request Body
+     */
+    public function getBody($type);
+
+    /**
      * Get Request Header Item
      */
     public function getHeader($key);
+
+    /**
+     * Get Headers
+     */
+    public function getHeaders();
+
+    /**
+     * Get Parameters
+     */
+    public function getParameters();
 
     /**
      * Check if Header Item Exists
@@ -79,4 +100,13 @@ interface RequestInterface {
      */
     public function debug();
 
+    /**
+     * Dump The PlainRequest Instance Data
+     */
+    public function dump($type);
+
+    /**
+     * Reload The PlainRequest Instance Data
+     */
+    public function reload($data, $type);
 }

@@ -19,6 +19,6 @@ class CallerStatusTest extends TestCase {
         $this->assertEquals(CallerStatus::$IN_PROGRESS, "IN_PROGRESS");
         $this->assertEquals(CallerStatus::$ASYNC_JOB, "ASYNC_JOB");
         $this->assertEquals(CallerStatus::$FAILED, "FAILED");
-        $this->assertEquals(CallerStatus::$FINISHED, "FINISHED");
+        $this->assertEquals(CallerStatus::$SUCCEEDED, "SUCCEEDED");
     }
 }

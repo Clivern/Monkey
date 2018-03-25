@@ -57,7 +57,7 @@ class Caller {
      */
     public function execute()
     {
-        if (($this->status == CallerStatus::$FINISHED) || ($this->status == CallerStatus::$SUCCEEDED)) {
+        if ($this->status == CallerStatus::$SUCCEEDED) {
             return $this;
         }
 

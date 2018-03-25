@@ -28,11 +28,8 @@ class Caller {
     ];
     protected $response;
     protected $request;
-
     protected $status;
     protected $shared = [];
-    protected $retry = 0;
-    protected $retryLimit = 1;
 
     /**
      * Class Constructor
@@ -42,13 +39,12 @@ class Caller {
      * @param string            $ident    The Caller Ident
      * @param string            $apiData  The CloudStack Node URL
      */
-    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $apiData = [], $retryLimit = 1)
+    public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $apiData = [])
     {
         $this->ident = $ident;
         $this->apiData = array_merge($this->apiData, $apiData);
         $this->request = $request;
         $this->response = $response;
-        $this->retryLimit = $retryLimit;
         $this->client = new Client();
         $this->request->addParameter("apiKey", (isset($apiData["apiKey"])) ? $apiData["apiKey"] : "");
         $this->status = CallerStatus::$PENDING;
@@ -61,7 +57,7 @@ class Caller {
      */
     public function execute()
     {
-        if (($this->status == CallerStatus::$FINISHED) || ($this->status == CallerStatus::$SUCCEEDED) || ($this->status == CallerStatus::$FAILED)) {
+        if (($this->status == CallerStatus::$FINISHED) || ($this->status == CallerStatus::$SUCCEEDED)) {
             return $this;
         }
 
@@ -69,7 +65,7 @@ class Caller {
             return $this->chechAsyncCall();
         }
 
-        if (($this->status == CallerStatus::$PENDING) || ($this->status == CallerStatus::$IN_PROGRESS)) {
+        if (($this->status == CallerStatus::$PENDING) || ($this->status == CallerStatus::$IN_PROGRESS) || ($this->status == CallerStatus::$FAILED)) {
             if ($this->request->getType() == RequestType::$ASYNCHRONOUS) {
                 return $this->executeAsyncCall();
             } else {
@@ -88,7 +84,6 @@ class Caller {
     protected function executeSyncCall()
     {
         $this->status = CallerStatus::$IN_PROGRESS;
-        $this->retry += 1;
         $status = true;
 
         try {
@@ -120,7 +115,7 @@ class Caller {
             $this->status = CallerStatus::$SUCCEEDED;
             $this->response->setResponse(json_decode((string) $response->getBody(), true));
         } else {
-            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
+            $this->status = CallerStatus::$FAILED;
             $this->response->setResponse([]);
         }
 
@@ -141,7 +136,6 @@ class Caller {
     protected function executeAsyncCall()
     {
         $this->status = CallerStatus::$IN_PROGRESS;
-        $this->retry += 1;
         $status = true;
 
         try {
@@ -181,7 +175,7 @@ class Caller {
 
             $this->response->setAsyncJob($asyncJob)->setAsyncJobId($asyncJobId);
         } else {
-            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
+            $this->status = CallerStatus::$FAILED;
             $this->response->setAsyncJob([]);
         }
 
@@ -201,7 +195,6 @@ class Caller {
      */
     protected function chechAsyncCall()
     {
-        $this->retry += 1;
         $status = true;
 
         try {
@@ -233,7 +226,7 @@ class Caller {
             $this->status = CallerStatus::$SUCCEEDED;
             $this->response->setResponse(json_decode((string) $response->getBody(), true));
         } else {
-            $this->status = ($this->retry >= $this->retryLimit) ? CallerStatus::$FAILED : CallerStatus::$IN_PROGRESS;
+            $this->status = CallerStatus::$FAILED;
             $this->response->setResponse([]);
         }
 
@@ -361,8 +354,6 @@ class Caller {
     public function dump($type)
     {
         $data = [
-            "retry" => $this->retry,
-            "retryLimit" => $this->retryLimit,
             "shared" => $this->shared,
             "status" => $this->status,
             "ident" => $this->ident,
@@ -383,8 +374,6 @@ class Caller {
     {
         $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
 
-        $this->retry = $data["retry"];
-        $this->retryLimit = $data["retryLimit"];
         $this->shared = $data["shared"];
         $this->status = $data["status"];
         $this->ident = $data["ident"];

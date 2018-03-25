@@ -99,7 +99,7 @@ class Caller {
         } catch (\Exception $e) {
 
             $status = false;
-            $parsedError = !empty((String) $e->getResponse()->getBody(true)) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
+            $parsedError = (!empty($e->getResponse()) && !empty((String) $e->getResponse()->getBody(true))) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
             $errorCode = "M100";
             $errorMessage = "Error! Something Unexpected Happened.";
 
@@ -152,7 +152,7 @@ class Caller {
         } catch (\Exception $e) {
 
             $status = false;
-            $parsedError = !empty((String) $e->getResponse()->getBody(true)) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
+            $parsedError = (!empty($e->getResponse()) && !empty((String) $e->getResponse()->getBody(true))) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
             $errorCode = "M100";
             $errorMessage = "Error! Something Unexpected Happened.";
 
@@ -212,7 +212,7 @@ class Caller {
         } catch (\Exception $e) {
 
             $status = false;
-            $parsedError = !empty((String) $e->getResponse()->getBody(true)) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
+            $parsedError = (!empty($e->getResponse()) && !empty((String) $e->getResponse()->getBody(true))) ? json_decode((String) $e->getResponse()->getBody(true), true) : [];
             $errorCode = "M100";
             $errorMessage = "Error! Something Unexpected Happened.";
 

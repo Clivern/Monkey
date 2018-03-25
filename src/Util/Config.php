@@ -9,99 +9,76 @@ namespace Clivern\Monkey\Util;
  */
 class Config {
 
-    private $logging = [];
-    private $cloudStackNodes = [];
+    private $cloudStackServers = [];
 
     /**
      * Class Constructor
      *
-     * @param array $cloudStackNodes A List of CloudStack Nodes, Credentials and More Info
-     * @param array $logging         Package Logging Settings
+     * @param array $cloudStackServers A List of CloudStack Servers, Credentials and More Info
      */
-    public function __construct($cloudStackNodes = [], $logging = [])
+    public function __construct($cloudStackServers = [])
     {
-        $this->cloudStackNodes = $cloudStackNodes;
-        $this->logging = $logging;
+        $this->cloudStackServers = $cloudStackServers;
     }
 
     /**
-     * Add CloudStack Node
+     * Add CloudStack Server
      *
-     * @param String $nodeIdent       CloudStack Node Ident
-     * @param Array $nodeCredentials  CloudStack Node Credentials
+     * @param  string $serverIdent       CloudStack Server Ident
+     * @param  array  $serverCredentials  CloudStack Server Credentials
      * @return Config An instance of Config Class
      */
-    public function addCloudStackNode($nodeIdent, $nodeCredentials)
+    public function addCloudStackServer($serverIdent, $serverCredentials)
     {
-        $this->cloudStackNodes[$nodeIdent] = $nodeCredentials;
+        $this->cloudStackServers[$serverIdent] = $serverCredentials;
 
         return $this;
     }
 
     /**
-     * Remove CloudStack Node Info
+     * Remove CloudStack Server
      *
-     * @param String $nodeIdent The CloudStack Node Ident
-     * @return Boolean Whether node removed or not
+     * @param  string  $serverIdent The CloudStack Server Ident
+     * @return boolean Whether node removed or not
      */
-    public function removeCloudStackNode($nodeIdent)
+    public function removeCloudStackServer($serverIdent)
     {
-        if( isset($this->cloudStackNodes[$nodeIdent]) ){
-            unset($this->cloudStackNodes[$nodeIdent]);
+        if( isset($this->cloudStackServers[$serverIdent]) ){
+            unset($this->cloudStackServers[$serverIdent]);
         }
 
-        return !(isset($this->cloudStackNodes[$nodeIdent]));
+        return !(isset($this->cloudStackServers[$serverIdent]));
     }
 
     /**
-     * Get All CloudStack Nodes
+     * Get All CloudStack Servers
      *
-     * @return Array A list of CloudStack Nodes
+     * @return array A list of CloudStack Servers
      */
-    public function getCloudStackNodes()
+    public function getCloudStackServers()
     {
-        return $this->cloudStackNodes;
+        return $this->cloudStackServers;
     }
 
     /**
-     * Check if Node Exist
+     * Check if Server Exist
      *
-     * @param  String  $nodeIdent The Node Ident
-     * @return boolean  Whether Node Exist or Not
+     * @param  String  $serverIdent The Server Ident
+     * @return boolean  Whether Server Exist or Not
      */
-    public function isCloudStackNodeExists($nodeIdent)
+    public function isCloudStackServerExists($serverIdent)
     {
-        return (isset($this->cloudStackNodes[$nodeIdent])) ? true : false;
+        return (isset($this->cloudStackServers[$serverIdent])) ? true : false;
     }
 
     /**
-     * Get CloudStack Node Info
+     * Get CloudStack Server Info
      *
-     * @param  String $nodeIdent The Node Ident
-     * @return Array The Node Info
+     * @param  String $serverIdent The Server Ident
+     * @return array The Server Info
      */
-    public function getCloudStackNode($nodeIdent)
+    public function getCloudStackServer($serverIdent)
     {
-        return (isset($this->cloudStackNodes[$nodeIdent])) ? $this->cloudStackNodes[$nodeIdent] : [];
-    }
-
-    /**
-     * Config The Package Logging
-     *
-     * @param Array $logging The Logging Settings
-     */
-    public function configLogging($logging)
-    {
-        $this->logging = array_merge($this->logging, $logging);
-    }
-
-    /**
-     * Get Logging Settings
-     *
-     * @return Array Logging Settings
-     */
-    public function getLoggingConfigs()
-    {
-        return $this->logging;
+        return (isset($this->cloudStackServers[$serverIdent])) ? $this->cloudStackServers[$serverIdent] : [];
     }
 }

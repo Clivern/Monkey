@@ -69,7 +69,7 @@ interface ResponseInterface {
     /**
      * Get Callback
      */
-    public function getCallback()
+    public function getCallback();
 
     /**
      * Get The Error
@@ -79,17 +79,17 @@ interface ResponseInterface {
     /**
      * Get Plain Error
      */
-    public function getPlainError()
+    public function getPlainError();
 
     /**
      * Get Parsed Error
      */
-    public function getParsedError()
+    public function getParsedError();
 
     /**
      * Get Error Code
      */
-    public function getErrorCode()
+    public function getErrorCode();
 
     /**
      * Get Error Message
@@ -99,7 +99,7 @@ interface ResponseInterface {
     /**
      * Dump The PlainResponse Instance Data
      */
-    public function dump($type)
+    public function dump($type);
 
     /**
      * Reload The PlainResponse Instance Data

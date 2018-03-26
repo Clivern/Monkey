@@ -19,6 +19,10 @@ class Caller {
 
     protected $client;
     protected $ident;
+    protected $response;
+    protected $request;
+    protected $status;
+    protected $shared = [];
     protected $apiData = [
         "apiUrl"   => "",
         "apiKey"    => "",
@@ -26,10 +30,6 @@ class Caller {
         "ssoEnabled" => false,
         "ssoKey" => ""
     ];
-    protected $response;
-    protected $request;
-    protected $status;
-    protected $shared = [];
 
     /**
      * Class Constructor
@@ -37,22 +37,17 @@ class Caller {
      * @param RequestInterface  $request  The Request Object
      * @param ResponseInterface $response The Response Object
      * @param string            $ident    The Caller Ident
-     * @param string            $apiData  The CloudStack Node URL
+     * @param string            $apiData  The CloudStack Configs
      */
     public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $apiData = [])
     {
         $this->ident = $ident;
-        $this->apiData = array_merge($this->apiData, $apiData);
         $this->request = $request;
         $this->response = $response;
+        $this->apiData = array_merge($this->apiData, $apiData);
         $this->client = new Client();
         $this->request->addParameter("apiKey", (isset($apiData["apiKey"])) ? $apiData["apiKey"] : "");
         $this->status = CallerStatus::$PENDING;
-    }
-
-    public function getIdent()
-    {
-        return $this->ident;
     }
 
     /**
@@ -255,6 +250,19 @@ class Caller {
     }
 
     /**
+     * Set Caller Status
+     *
+     * @param string $status the caller status
+     * @return Caller
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
      * Get Request Object
      *
      * @return RequestInterface
@@ -351,6 +359,29 @@ class Caller {
     }
 
     /**
+     * Get Caller Ident
+     *
+     * @return string the caller ident
+     */
+    public function getIdent()
+    {
+        return $this->ident;
+    }
+
+    /**
+     * Set Caller Ident
+     *
+     * @param string $ident the caller ident
+     * @return Caller
+     */
+    public function setIdent($ident)
+    {
+        $this->ident = $ident;
+
+        return $this;
+    }
+
+    /**
      * Dump The Caller Instance Data
      *
      * @param  string $type the type of data
@@ -391,7 +422,7 @@ class Caller {
     /**
      * Get Request URL
      *
-     * @return string
+     * @return string the request final url
      */
     protected function getUrl()
     {
@@ -422,7 +453,7 @@ class Caller {
     /**
      * Get Job URL
      *
-     * @return string
+     * @return string the async job check url
      */
     protected function getJobUrl($jobId)
     {
@@ -438,6 +469,7 @@ class Caller {
                 'Required options not defined: ssoKey'
             );
         }
+
         ksort($parameters);
 
         $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);

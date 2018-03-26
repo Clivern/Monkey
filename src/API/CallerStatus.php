@@ -1,7 +1,11 @@
 <?php
+
 namespace Clivern\Monkey\API;
 
+
 /**
+ * Caller Statuses Class
+ *
  * @since 1.0.0
  * @package Clivern\Monkey\API
  */

@@ -182,6 +182,17 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
+     * Check if Item Exists
+     *
+     * @param   string $key the response item key
+     * @return  boolean Whether item exists or not
+     */
+    public function itemExists($key)
+    {
+        return (isset($this->items[$key]));
+    }
+
+    /**
      * Get Response Item
      *
      * @param string $key  the response item key
@@ -189,7 +200,7 @@ class PlainResponse implements ResponseInterface {
      */
     public function getItem($key)
     {
-        return (isset($this->items[$key])) ? $this->items[$key] : null;
+        return ($this->itemExists($key)) ? $this->items[$key] : null;
     }
 
     /**
@@ -253,5 +264,6 @@ class PlainResponse implements ResponseInterface {
         $this->asyncJob = $data["asyncJob"];
         $this->asyncJobId = $data["asyncJobId"];
         $this->error = $data["error"];
+        return $this;
     }
 }

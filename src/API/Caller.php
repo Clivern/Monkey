@@ -50,6 +50,11 @@ class Caller {
         $this->status = CallerStatus::$PENDING;
     }
 
+    public function getIdent()
+    {
+        return $this->ident;
+    }
+
     /**
      * Execute The Caller
      *
@@ -380,6 +385,7 @@ class Caller {
         $this->apiData = $data["apiData"];
         $this->response->reload($data["response"], DumpType::$ARRAY);
         $this->request->reload($data["request"], DumpType::$ARRAY);
+        return $this;
     }
 
     /**

@@ -294,5 +294,6 @@ class PlainRequest implements RequestInterface {
         $this->items = $data["items"];
         $this->headers = $data["headers"];
         $this->type = $data["type"];
+        return $this;
     }
 }

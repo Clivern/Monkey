@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Apache CloudStack SDK in PHP.",
     "keywords": ["clivern", "monkey", "cloudstack", "apache-cloudstack", "cloudstack-api", "cloud-computing"],
-    "license": "The Apache Software License, Version 2.0",
+    "license": "MIT",
     "homepage": "https://github.com/clivern/monkey",
     "authors": [
         {

@@ -387,6 +387,34 @@ if( $currentJob != null ){
 
 ### Monkey on Production
 
+Here i was trying to describe different usage cases of monkey but in case of production, we must have a database table(s) for our jobs and executer to run our jobs in background.
+
+We will need custom request classes for each specific command so we don't need to provide command data every time we create a request.
+
+```php
+use Clivern\Monkey\API\Contract\RequestInterface;
+use Clivern\Monkey\API\Request\PlainRequest;
+
+
+class CreateUser extends PlainRequest implements RequestInterface {
+
+}
+```
+
+We will need custom response classes for each specific command so we don't need to parse the response to fetch the useful response data and has a direct method to do that.
+
+```php
+use Clivern\Monkey\API\Contract\ResponseInterface;
+use Clivern\Monkey\API\Response\PlainResponse;
+
+
+class CreateUser extends PlainResponse implements ResponseInterface {
+
+}
+```
+
+Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job. Finally i created a [repository to share these ideas and how to apply them in symfony framework but for sure it can be applied to other frameworks](https://github.com/Clivern/Koba). I named it [Koba](https://github.com/Clivern/Koba) like the Monkey from Dawn of the Planet of the Apes :)
+
 
 Misc
 ====

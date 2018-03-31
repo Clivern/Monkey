@@ -33,7 +33,7 @@ use Clivern\Monkey\Util\Config;
 
 $config = new Config();
 $config->addCloudStackServer("us_dc_clsk_01", [
-	"api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_url"   => "http://clsk_url.com:8080/client/api",
     "api_key"    => "api_key_here",
     "secret_key" => "secret_key_here"
 ]);
@@ -41,11 +41,11 @@ $config->addCloudStackServer("us_dc_clsk_01", [
 // OR
 
 $config = new Config([
-	"us_dc_clsk_01" => [
-		"api_url"   => "http://clsk_url.com:8080/client/api",
-	    "api_key"    => "api_key_here",
-	    "secret_key" => "secret_key_here"
-	]
+    "us_dc_clsk_01" => [
+        "api_url"   => "http://clsk_url.com:8080/client/api",
+        "api_key"    => "api_key_here",
+        "secret_key" => "secret_key_here"
+    ]
 ]);
 
 // To Check if CloudStack Server Credentials Exists

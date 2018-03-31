@@ -384,6 +384,200 @@ if( $currentJob != null ){
 
 ### More Complex Usage
 
+Let's make it more complex, Now we need to deploy a virtual server with these data:
+
+- Template `CentOS 5.6 (64-bit) no GUI (Simulator)`
+- Service Offering: `Small Instance`
+- Zone: `Sandbox-simulator`
+
+And as you know [from API we need the id of the template, service offering and zone](http://cloudstack.apache.org/api/apidocs-4.11/apis/deployVirtualMachine.html). In this case we will create a separate callers to get these ids before we deploy the virtual server. and we will use response callbacks to store these ids in the caller shared data to be used by the job object.
+
+
+```php
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+use Clivern\Monkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Response\PlainResponse;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Caller;
+use Clivern\Monkey\API\Job;
+use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Factory;
+use Clivern\Monkey\API\JobStatus;
+use Clivern\Monkey\API\CallerStatus;
+
+
+class TemplatesFilter
+{
+    public static function addTemplateId($caller, $arguments)
+    {
+        if ($caller->getStatus() !=  CallerStatus::$SUCCEEDED) {
+            return false;
+        }
+        $response = $caller->response()->getResponse();
+        if( !is_array($response) || !isset($response["listtemplatesresponse"]) || !isset($response["listtemplatesresponse"]["template"]) ){
+            return false;
+        }
+        foreach ($response["listtemplatesresponse"]["template"] as $template) {
+            if(isset($arguments['template_name']) && ($template['name'] == $arguments['template_name'])) {
+                $caller->addItem("templateid", $template['id']);
+                break;
+            }elseif(!isset($arguments['template_name'])){
+                $caller->addItem("templateid", $template['id']);
+                break;
+            }
+        }
+    }
+}
+
+class ServiceOfferingsFilter
+{
+    public static function addServiceOfferId($caller, $arguments)
+    {
+        if ($caller->getStatus() !=  CallerStatus::$SUCCEEDED) {
+            return false;
+        }
+        $response = $caller->response()->getResponse();
+        if( !is_array($response) || !isset($response["listserviceofferingsresponse"]) || !isset($response["listserviceofferingsresponse"]["serviceoffering"]) ){
+            return false;
+        }
+        foreach ($response["listserviceofferingsresponse"]["serviceoffering"] as $serviceoffering) {
+            if(isset($arguments['template_name']) && ($serviceoffering['name'] == $arguments['serviceoffering_name'])) {
+                $caller->addItem("serviceofferingid", $serviceoffering['id']);
+                break;
+            }elseif(!isset($arguments['template_name'])){
+                $caller->addItem("serviceofferingid", $serviceoffering['id']);
+                break;
+            }
+        }
+    }
+}
+
+class ZoneFilter
+{
+    public static function addZoneId($caller, $arguments)
+    {
+        if ($caller->getStatus() !=  CallerStatus::$SUCCEEDED) {
+            return false;
+        }
+        $response = $caller->response()->getResponse();
+        if( !is_array($response) || !isset($response["listzonesresponse"]) || !isset($response["listzonesresponse"]["zone"]) ){
+            return false;
+        }
+        foreach ($response["listzonesresponse"]["zone"] as $zone) {
+            if(isset($arguments['zone_name']) && ($zone['name'] == $arguments['zone_name'])) {
+                $caller->addItem("zoneid", $zone['id']);
+                break;
+            }elseif(!isset($arguments['zone_name'])){
+                $caller->addItem("zoneid", $zone['id']);
+                break;
+            }
+        }
+    }
+}
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+$request1 = new PlainRequest();
+$request1->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$SYNCHRONOUS)
+        ->addParameter("command", "listTemplates")
+        ->addParameter("templatefilter", "featured");
+
+$response1 = new PlainResponse("\TemplatesFilter::addTemplateId", ["template_name" => "CentOS 5.6 (64-bit) no GUI (Simulator)"]);
+
+$caller1 = new Caller($request1, $response1, "list_templates", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+$request2 = new PlainRequest();
+$request2->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$SYNCHRONOUS)
+        ->addParameter("command", "listServiceOfferings");
+
+$response2 = new PlainResponse("\ServiceOfferingsFilter::addServiceOfferId", ["serviceoffering_name" => "Small Instance"]);
+
+$caller2 = new Caller($request2, $response2, "list_service_offering", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+$request3 = new PlainRequest();
+$request3->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$SYNCHRONOUS)
+        ->addParameter("command", "listZones");
+
+$response3 = new PlainResponse("\ZoneFilter::addZoneId", ["zone_name" => "Sandbox-simulator"]);
+
+$caller3 = new Caller($request3, $response3, "list_zone", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+$request4 = new PlainRequest();
+$request4->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$ASYNCHRONOUS)
+        ->addParameter("command", "deployVirtualMachine")
+        ->addParameter("serviceofferingid", "@list_service_offering->serviceofferingid") // Here we use the ids with caller ident and item key
+        ->addParameter("templateid", "@list_templates->templateid") // Here we use the ids with caller ident and item key
+        ->addParameter("zoneid", "@list_zone->zoneid"); // Here we use the ids with caller ident and item key
+
+$response4 = new PlainResponse();
+
+$caller4 = new Caller($request4, $response4, "deploy_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+// Create a job with two callers and 4 default trials in case of failure
+$job = new \Clivern\Monkey\API\Job([
+    $caller1,
+    $caller2,
+    $caller3,
+    $caller4
+], 4);
+
+// Job initial state to store in database
+$initialJobState = $job->dump(DumpType::$JSON);
+var_dump($initialJobState);
+
+$currentJobState = $initialJobState;
+$finished = false;
+$currentJob = null;
+
+while (!$finished) {
+    $currentJob = Factory::job()->reload($currentJobState, DumpType::$JSON);
+    $currentJob->execute();
+    $finished = (($currentJob->getStatus() == JobStatus::$FAILED) || ($currentJob->getStatus() == JobStatus::$SUCCEEDED)) ? true : false;
+    $currentJobState = $currentJob->dump(DumpType::$JSON);
+    sleep(5);
+}
+
+if( $currentJob != null ){
+    var_dump($currentJob->getStatus());
+
+    var_dump($currentJob->getCaller("list_service_offering")->getStatus());
+    var_dump($currentJob->getCaller("list_service_offering")->response()->getResponse());
+    var_dump($currentJob->getCaller("list_service_offering")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("list_service_offering")->response()->getErrorMessage());
+
+    var_dump($currentJob->getCaller("list_templates")->getStatus());
+    var_dump($currentJob->getCaller("list_templates")->response()->getResponse());
+    var_dump($currentJob->getCaller("list_templates")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("list_templates")->response()->getErrorMessage());
+
+    var_dump($currentJob->getCaller("list_zone")->getStatus());
+    var_dump($currentJob->getCaller("list_zone")->response()->getResponse());
+    var_dump($currentJob->getCaller("list_zone")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("list_zone")->response()->getErrorMessage());
+
+    var_dump($currentJob->getCaller("deploy_virtual_machine")->getStatus());
+    var_dump($currentJob->getCaller("deploy_virtual_machine")->response()->getResponse());
+    var_dump($currentJob->getCaller("deploy_virtual_machine")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("deploy_virtual_machine")->response()->getErrorMessage());
+    var_dump($currentJob->dump(DumpType::$JSON));
+}
+```
 
 ### Monkey on Production
 

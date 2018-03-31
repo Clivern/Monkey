@@ -300,6 +300,87 @@ if( $currentJob != null ){
 
 ### Running Complex Jobs
 
+If we want to run two calls but they are independent on each other, it is all about the order. We just need to run one then another like stop and start the virtual machine. In this case we will create two callers and create a job with the two callers like the following:
+
+```php
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+use Clivern\Monkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Response\PlainResponse;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Caller;
+use Clivern\Monkey\API\Job;
+use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Factory;
+use Clivern\Monkey\API\JobStatus;
+
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+$request1 = new PlainRequest();
+$request1->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$ASYNCHRONOUS)
+        ->addParameter("command", "stopVirtualMachine")
+        ->addParameter("id", "4c9c8759-de26-41bb-9a22-fe51b9f0c9af");
+
+$response1 = new PlainResponse();
+
+$caller1 = new Caller($request1, $response1, "stop_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+$request2 = new PlainRequest();
+$request2->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$ASYNCHRONOUS)
+        ->addParameter("command", "startVirtualMachine")
+        ->addParameter("id", "4c9c8759-de26-41bb-9a22-fe51b9f0c9af");
+
+$response2 = new PlainResponse();
+
+$caller2 = new Caller($request2, $response2, "start_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+// Create a job with two callers and 4 default trials in case of failure
+$job = new \Clivern\Monkey\API\Job([
+    $caller1,
+    $caller2
+], 4);
+
+// Job initial state to store in database
+$initialJobState = $job->dump(DumpType::$JSON);
+var_dump($initialJobState);
+
+$currentJobState = $initialJobState;
+$finished = false;
+$currentJob = null;
+
+while (!$finished) {
+    $currentJob = Factory::job()->reload($currentJobState, DumpType::$JSON);
+    $currentJob->execute();
+    $finished = (($currentJob->getStatus() == JobStatus::$FAILED) || ($currentJob->getStatus() == JobStatus::$SUCCEEDED)) ? true : false;
+    $currentJobState = $currentJob->dump(DumpType::$JSON);
+    sleep(5);
+}
+
+if( $currentJob != null ){
+    var_dump($currentJob->getStatus());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->getStatus());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getResponse());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getErrorMessage());
+    var_dump($currentJob->getCaller("start_virtual_machine")->getStatus());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getResponse());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getErrorMessage());
+    var_dump($currentJob->dump(DumpType::$JSON));
+}
+```
 
 ### More Complex Usage
 

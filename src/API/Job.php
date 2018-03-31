@@ -34,8 +34,8 @@ class Job {
     {
         $this->callers = $this->organizeCaller($callers);
         $this->defaultRetry = $defaultRetry;
-        $this->retryPerCaller = array_merge(array_fill_keys(array_keys($callers), $this->defaultRetry), $retryPerCaller);
-        $this->trialsPerCaller = array_fill_keys(array_keys($callers), 0);
+        $this->retryPerCaller = array_merge(array_fill_keys(array_keys($this->callers), $this->defaultRetry), $retryPerCaller);
+        $this->trialsPerCaller = array_fill_keys(array_keys($this->callers), 0);
         $this->status = JobStatus::$PENDING;
     }
 

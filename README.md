@@ -162,30 +162,149 @@ var_dump($caller->response()->getErrorMessage()); // Returns string(0) ""
 
 ### Running Async Jobs
 
+In case of async calls, we need to use another class called `Job` to execute our caller(s). The `Job` class can be exported as json encoded string and stored in database and reloaded again from the last state. This means that we can build a job that hold a lot of sync and async calls and the job class will continue every time we reload it and complete the main request.
 
+Also `Job` class can retry to run your caller(s) if it failed and once it succeeded, it will move to the next caller. and for sure you will provide the number of trials for each job or per each caller.
+
+First let's [create a job that will stop a virtual machine](http://cloudstack.apache.org/api/apidocs-4.11/apis/stopVirtualMachine.html). This job needs to run at least two times, one to create the machine and another to check the job status. Since we don't use database to store job state, we will do this manually. But for sure in real world we will store job in database and run in background.
+
+```php
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+use Clivern\Monkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Response\PlainResponse;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Caller;
+use Clivern\Monkey\API\Job;
+use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Factory;
+use Clivern\Monkey\API\JobStatus;
+
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+$request = new PlainRequest();
+$request->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$ASYNCHRONOUS)
+        ->addParameter("command", "stopVirtualMachine")
+        ->addParameter("id", "4c9c8759-de26-41bb-9a22-fe51b9f0c9af");
+
+$response = new PlainResponse();
+
+$caller = new Caller($request, $response, "stop_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+// Create a job with one caller and 4 default trials in case of failure
+$job = new \Clivern\Monkey\API\Job([
+    $caller
+], 4);
+
+// Job initial state to store in database
+$initialJobState = $job->dump(DumpType::$JSON);
+var_dump($initialJobState);
+
+$currentJobState = $initialJobState;
+$finished = false;
+$currentJob = null;
+
+while (!$finished) {
+    $currentJob = Factory::job()->reload($currentJobState, DumpType::$JSON);
+    $currentJob->execute();
+    $finished = (($currentJob->getStatus() == JobStatus::$FAILED) || ($currentJob->getStatus() == JobStatus::$SUCCEEDED)) ? true : false;
+    $currentJobState = $currentJob->dump(DumpType::$JSON);
+    sleep(5);
+}
+
+if( $currentJob != null ){
+    var_dump($currentJob->getStatus());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->getStatus());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getResponse());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("stop_virtual_machine")->response()->getErrorMessage());
+    var_dump($currentJob->dump(DumpType::$JSON));
+}
+```
+
+Also [we can start the virtual machine again](http://cloudstack.apache.org/api/apidocs-4.11/apis/startVirtualMachine.html)
+
+```php
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+use Clivern\Monkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Response\PlainResponse;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Caller;
+use Clivern\Monkey\API\Job;
+use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Factory;
+use Clivern\Monkey\API\JobStatus;
+
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+$request = new PlainRequest();
+$request->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$ASYNCHRONOUS)
+        ->addParameter("command", "startVirtualMachine")
+        ->addParameter("id", "4c9c8759-de26-41bb-9a22-fe51b9f0c9af");
+
+$response = new PlainResponse();
+
+$caller = new Caller($request, $response, "start_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
+
+
+// Create a job with one caller and 4 default trials in case of failure
+$job = new \Clivern\Monkey\API\Job([
+    $caller
+], 4);
+
+// Job initial state to store in database
+$initialJobState = $job->dump(DumpType::$JSON);
+var_dump($initialJobState);
+
+$currentJobState = $initialJobState;
+$finished = false;
+$currentJob = null;
+
+while (!$finished) {
+    $currentJob = Factory::job()->reload($currentJobState, DumpType::$JSON);
+    $currentJob->execute();
+    $finished = (($currentJob->getStatus() == JobStatus::$FAILED) || ($currentJob->getStatus() == JobStatus::$SUCCEEDED)) ? true : false;
+    $currentJobState = $currentJob->dump(DumpType::$JSON);
+    sleep(5);
+}
+
+if( $currentJob != null ){
+    var_dump($currentJob->getStatus());
+    var_dump($currentJob->getCaller("start_virtual_machine")->getStatus());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getResponse());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getErrorCode());
+    var_dump($currentJob->getCaller("start_virtual_machine")->response()->getErrorMessage());
+    var_dump($currentJob->dump(DumpType::$JSON));
+}
+```
 
 ### Running Complex Jobs
 
 
-
-
-### Building The API Request
-
-
-
-### Building The API Response
-
-
-
-### Creating a Caller
-
-
-
-### Create and Call The Job
-
-
-
 ### More Complex Usage
+
+
+### Monkey on Production
 
 
 Misc

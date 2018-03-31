@@ -4,6 +4,7 @@ namespace Tests\API;
 use Clivern\Monkey\API\JobStatus;
 use PHPUnit\Framework\TestCase;
 
+
 /**
  * JobStatus Class Test
  *
@@ -18,6 +19,6 @@ class JobStatusTest extends TestCase {
         $this->assertEquals(JobStatus::$PENDING, "PENDING");
         $this->assertEquals(JobStatus::$IN_PROGRESS, "IN_PROGRESS");
         $this->assertEquals(JobStatus::$FAILED, "FAILED");
-        $this->assertEquals(JobStatus::$FINISHED, "FINISHED");
+        $this->assertEquals(JobStatus::$SUCCEEDED, "SUCCEEDED");
     }
 }

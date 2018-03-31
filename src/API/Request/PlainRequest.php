@@ -1,21 +1,26 @@
 <?php
+
 namespace Clivern\Monkey\API\Request;
 
-use Clivern\Monkey\API\Contract\RequestInterface;
 use Clivern\Monkey\API\DumpType;
 use Clivern\Monkey\API\Request\ResponseType;
+use Clivern\Monkey\API\Contract\RequestInterface;
+
 
 /**
+ * Plain Request Class
+ *
  * @since 1.0.0
  * @package Clivern\Monkey\API\Request
  */
 class PlainRequest implements RequestInterface {
 
+    protected $type;
     protected $method;
     protected $parameters = [];
     protected $items = [];
     protected $headers = [];
-    protected $type;
+
 
     /**
      * Class Constructor
@@ -23,6 +28,7 @@ class PlainRequest implements RequestInterface {
      * @param string $method     The Request Method
      * @param string $type       The Request Type
      * @param array  $parameters The Request URL Parameters
+     * @param array  $headers    The Request Headers
      * @param array  $items      The Request Body Items
      */
     public function __construct($method = null, $type = null, $parameters = [], $headers = [], $items = [])
@@ -285,6 +291,7 @@ class PlainRequest implements RequestInterface {
      *
      * @param  mixed  $data The PlainRequest Instance Data
      * @param  string $type the type of data
+     * @return PlainRequest
      */
     public function reload($data, $type)
     {
@@ -294,5 +301,7 @@ class PlainRequest implements RequestInterface {
         $this->items = $data["items"];
         $this->headers = $data["headers"];
         $this->type = $data["type"];
+
+        return $this;
     }
 }

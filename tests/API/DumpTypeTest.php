@@ -4,6 +4,7 @@ namespace Tests\API;
 use Clivern\Monkey\API\DumpType;
 use PHPUnit\Framework\TestCase;
 
+
 /**
  * DumpType Class Test
  *

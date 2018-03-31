@@ -1,10 +1,14 @@
 <?php
+
 namespace Clivern\Monkey\API\Response;
 
-use Clivern\Monkey\API\Contract\ResponseInterface;
 use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\Contract\ResponseInterface;
+
 
 /**
+ * Plain Response Class
+ *
  * @since 1.0.0
  * @package Clivern\Monkey\API\Response
  */
@@ -13,11 +17,11 @@ class PlainResponse implements ResponseInterface {
     protected $response = [];
     protected $asyncJob = [];
     protected $asyncJobId = "";
+    protected $items = [];
     protected $callback = [
         "method" => null,
         "arguments" => null
     ];
-    protected $items = [];
     protected $error = [
         "parsed" => [],
         "plain" => "",
@@ -25,10 +29,12 @@ class PlainResponse implements ResponseInterface {
         "message" => ""
     ];
 
+
     /**
      * Class Constructor
      *
-     * @param mixed $callback The response callback
+     * @param string $callbackMethod The response callback class and method
+     * @param array  $callbackArguments The response callback arguments
      */
     public function __construct($callbackMethod = null, $callbackArguments = [])
     {
@@ -39,17 +45,7 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
-     * Get Response As Array
-     *
-     * @return array
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Set Response As Array
+     * Set Response
      *
      * @param array $response The Response
      * @return PlainResponse
@@ -62,17 +58,7 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
-     * Get Async Job As Array
-     *
-     * @return array The Async Job Data
-     */
-    public function getAsyncJob()
-    {
-        return $this->asyncJob;
-    }
-
-    /**
-     * Set Async Job As Array
+     * Set Async Job
      *
      * @param array $asyncJob The Async Job Data
      * @return PlainResponse
@@ -98,74 +84,15 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
-     * Get Async Job Id
-     *
-     * @return string
-     */
-    public function getAsyncJobId()
-    {
-        return $this->asyncJobId;
-    }
-
-    /**
      * Set Error
      *
-     * @param array $error The Returned Error
+     * @param array $error the returned error
      */
     public function setError($error)
     {
         $this->error = $error;
     }
 
-    /**
-     * Get The Error
-     *
-     * @return array
-     */
-    public function getError()
-    {
-        return $this->error;
-    }
-
-    /**
-     * Get Error As String
-     *
-     * @return String
-     */
-    public function getPlainError()
-    {
-        return $this->error["plain"];
-    }
-
-    /**
-     * Get Parsed Error
-     *
-     * @return array
-     */
-    public function getParsedError()
-    {
-        return $this->error["parsed"];
-    }
-
-    /**
-     * Get Error Code
-     *
-     * @return mixed
-     */
-    public function getErrorCode()
-    {
-        return $this->error["code"];
-    }
-
-    /**
-     * Get Error Message
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->error["message"];
-    }
 
     /**
      * Add Response Item
@@ -179,17 +106,6 @@ class PlainResponse implements ResponseInterface {
         $this->items[$key] = $value;
 
         return $this;
-    }
-
-    /**
-     * Get Response Item
-     *
-     * @param string $key  the response item key
-     * @return mixed the response item value
-     */
-    public function getItem($key)
-    {
-        return (isset($this->items[$key])) ? $this->items[$key] : null;
     }
 
     /**
@@ -210,6 +126,58 @@ class PlainResponse implements ResponseInterface {
     }
 
     /**
+     * Check if Item Exists
+     *
+     * @param   string $key the response item key
+     * @return  boolean Whether item exists or not
+     */
+    public function itemExists($key)
+    {
+        return (isset($this->items[$key]));
+    }
+
+    /**
+     * Get Response
+     *
+     * @return array
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * Get Async Job
+     *
+     * @return array The Async Job Data
+     */
+    public function getAsyncJob()
+    {
+        return $this->asyncJob;
+    }
+
+    /**
+     * Get Async Job Id
+     *
+     * @return string
+     */
+    public function getAsyncJobId()
+    {
+        return $this->asyncJobId;
+    }
+
+    /**
+     * Get Response Item
+     *
+     * @param string $key  the response item key
+     * @return mixed the response item value
+     */
+    public function getItem($key)
+    {
+        return ($this->itemExists($key)) ? $this->items[$key] : null;
+    }
+
+    /**
      * Get Callback
      *
      * @return array the response callback
@@ -217,6 +185,57 @@ class PlainResponse implements ResponseInterface {
     public function getCallback()
     {
         return $this->callback;
+    }
+
+
+    /**
+     * Get The Error
+     *
+     * @return array the returned error
+     */
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    /**
+     * Get Plain Error
+     *
+     * @return string the plain error
+     */
+    public function getPlainError()
+    {
+        return $this->error["plain"];
+    }
+
+    /**
+     * Get Parsed Error
+     *
+     * @return array the parsed error
+     */
+    public function getParsedError()
+    {
+        return $this->error["parsed"];
+    }
+
+    /**
+     * Get Error Code
+     *
+     * @return integer the error code
+     */
+    public function getErrorCode()
+    {
+        return $this->error["code"];
+    }
+
+    /**
+     * Get Error Message
+     *
+     * @return string the error message
+     */
+    public function getErrorMessage()
+    {
+        return $this->error["message"];
     }
 
     /**
@@ -243,6 +262,7 @@ class PlainResponse implements ResponseInterface {
      *
      * @param  mixed  $data The PlainResponse Instance Data
      * @param  string $type the type of data
+     * @return PlainResponse
      */
     public function reload($data, $type)
     {
@@ -253,5 +273,7 @@ class PlainResponse implements ResponseInterface {
         $this->asyncJob = $data["asyncJob"];
         $this->asyncJobId = $data["asyncJobId"];
         $this->error = $data["error"];
+
+        return $this;
     }
 }

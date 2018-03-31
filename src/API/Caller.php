@@ -1,13 +1,14 @@
 <?php
 namespace Clivern\Monkey\API;
 
-use Clivern\Monkey\API\Contract\ResponseInterface;
-use Clivern\Monkey\API\Contract\RequestInterface;
-use Clivern\Monkey\API\CallerStatus;
 use GuzzleHttp\Client;
 use Clivern\Monkey\API\DumpType;
+use Clivern\Monkey\API\CallerStatus;
 use Clivern\Monkey\API\Request\RequestType;
 use Clivern\Monkey\API\Request\ResponseType;
+use Clivern\Monkey\API\Contract\ResponseInterface;
+use Clivern\Monkey\API\Contract\RequestInterface;
+
 
 /**
  * CloudStack API Caller Class
@@ -19,17 +20,17 @@ class Caller {
 
     protected $client;
     protected $ident;
-    protected $apiData = [
-        "apiUrl"   => "",
-        "apiKey"    => "",
-        "secretKey" => "",
-        "ssoEnabled" => false,
-        "ssoKey" => ""
-    ];
     protected $response;
     protected $request;
     protected $status;
     protected $shared = [];
+    protected $apiData = [
+        "api_url"   => "",
+        "api_key"    => "",
+        "secret_key" => "",
+        "sso_enabled" => false,
+        "sso_key" => ""
+    ];
 
     /**
      * Class Constructor
@@ -37,16 +38,16 @@ class Caller {
      * @param RequestInterface  $request  The Request Object
      * @param ResponseInterface $response The Response Object
      * @param string            $ident    The Caller Ident
-     * @param string            $apiData  The CloudStack Node URL
+     * @param string            $apiData  The CloudStack Configs
      */
     public function __construct(RequestInterface $request = null, ResponseInterface $response = null, $ident = null, $apiData = [])
     {
         $this->ident = $ident;
-        $this->apiData = array_merge($this->apiData, $apiData);
         $this->request = $request;
         $this->response = $response;
+        $this->apiData = array_merge($this->apiData, $apiData);
         $this->client = new Client();
-        $this->request->addParameter("apiKey", (isset($apiData["apiKey"])) ? $apiData["apiKey"] : "");
+        $this->request->addParameter("apiKey", (isset($apiData["api_key"])) ? $apiData["api_key"] : "");
         $this->status = CallerStatus::$PENDING;
     }
 
@@ -57,7 +58,7 @@ class Caller {
      */
     public function execute()
     {
-        if (($this->status == CallerStatus::$FINISHED) || ($this->status == CallerStatus::$SUCCEEDED)) {
+        if ($this->status == CallerStatus::$SUCCEEDED) {
             return $this;
         }
 
@@ -250,6 +251,19 @@ class Caller {
     }
 
     /**
+     * Set Caller Status
+     *
+     * @param string $status the caller status
+     * @return Caller
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
      * Get Request Object
      *
      * @return RequestInterface
@@ -346,6 +360,29 @@ class Caller {
     }
 
     /**
+     * Get Caller Ident
+     *
+     * @return string the caller ident
+     */
+    public function getIdent()
+    {
+        return $this->ident;
+    }
+
+    /**
+     * Set Caller Ident
+     *
+     * @param string $ident the caller ident
+     * @return Caller
+     */
+    public function setIdent($ident)
+    {
+        $this->ident = $ident;
+
+        return $this;
+    }
+
+    /**
      * Dump The Caller Instance Data
      *
      * @param  string $type the type of data
@@ -380,26 +417,27 @@ class Caller {
         $this->apiData = $data["apiData"];
         $this->response->reload($data["response"], DumpType::$ARRAY);
         $this->request->reload($data["request"], DumpType::$ARRAY);
+        return $this;
     }
 
     /**
      * Get Request URL
      *
-     * @return string
+     * @return string the request final url
      */
     protected function getUrl()
     {
         $parameters = $this->request->getParameters();
 
-        if ($this->apiData["ssoEnabled"] && empty($this->apiData["ssoKey"])) {
+        if ($this->apiData["sso_enabled"] && empty($this->apiData["sso_key"])) {
             throw new \InvalidArgumentException(
-                'Required options not defined: ssoKey'
+                'Required options not defined: sso_key'
             );
         }
         ksort($parameters);
 
         $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);
-        $key = $this->apiData["ssoEnabled"] ? $this->apiData["ssoKey"] : $this->apiData["secretKey"];
+        $key = $this->apiData["sso_enabled"] ? $this->apiData["sso_key"] : $this->apiData["secret_key"];
 
         $signature = rawurlencode(base64_encode(hash_hmac(
             'SHA1',
@@ -410,32 +448,33 @@ class Caller {
 
         $query = trim($query . '&signature=' . $signature, '?&');
 
-        return $this->apiData["apiUrl"] . '?' . $query;
+        return $this->apiData["api_url"] . '?' . $query;
     }
 
     /**
      * Get Job URL
      *
-     * @return string
+     * @return string the async job check url
      */
     protected function getJobUrl($jobId)
     {
         $parameters = [
             "response"  => ResponseType::$JSON,
-            "apiKey"    => $this->apiData["apiKey"],
+            "apiKey"    => $this->apiData["api_key"],
             "command"   => "queryAsyncJobResult",
             "jobId"     => $jobId
         ];
 
-        if ($this->apiData["ssoEnabled"] && empty($this->apiData["ssoKey"])) {
+        if ($this->apiData["sso_enabled"] && empty($this->apiData["sso_key"])) {
             throw new \InvalidArgumentException(
-                'Required options not defined: ssoKey'
+                'Required options not defined: sso_key'
             );
         }
+
         ksort($parameters);
 
         $query = http_build_query($parameters, false, '&', PHP_QUERY_RFC3986);
-        $key = $this->apiData["ssoEnabled"] ? $this->apiData["ssoKey"] : $this->apiData["secretKey"];
+        $key = $this->apiData["sso_enabled"] ? $this->apiData["sso_key"] : $this->apiData["secret_key"];
 
         $signature = rawurlencode(base64_encode(hash_hmac(
             'SHA1',
@@ -446,6 +485,6 @@ class Caller {
 
         $query = trim($query . '&signature=' . $signature, '?&');
 
-        return $this->apiData["apiUrl"] . '?' . $query;
+        return $this->apiData["api_url"] . '?' . $query;
     }
 }

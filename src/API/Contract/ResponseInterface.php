@@ -1,5 +1,7 @@
 <?php
+
 namespace Clivern\Monkey\API\Contract;
+
 
 /**
  * API Response Interface
@@ -10,19 +12,9 @@ namespace Clivern\Monkey\API\Contract;
 interface ResponseInterface {
 
     /**
-     * Get Response
-     */
-    public function getResponse();
-
-    /**
      * Set Response
      */
     public function setResponse($response);
-
-    /**
-     * Get Async Job
-     */
-    public function getAsyncJob();
 
     /**
      * Set Async Job
@@ -35,14 +27,49 @@ interface ResponseInterface {
     public function setAsyncJobId($asyncJobId);
 
     /**
+     * Set Error
+     */
+    public function setError($error);
+
+    /**
+     * Add Response Item
+     */
+    public function addItem($key, $value);
+
+    /**
+     * Set Callback
+     */
+    public function setCallback($callbackMethod = null, $callbackArguments = []);
+
+    /**
+     * Check if Item Exists
+     */
+    public function itemExists($key);
+
+    /**
+     * Get Response
+     */
+    public function getResponse();
+
+    /**
+     * Get Async Job
+     */
+    public function getAsyncJob();
+
+    /**
      * Get Async Job Id
      */
     public function getAsyncJobId();
 
     /**
-     * Set Error
+     * Get Response Item
      */
-    public function setError($error);
+    public function getItem($key);
+
+    /**
+     * Get Callback
+     */
+    public function getCallback();
 
     /**
      * Get The Error
@@ -50,7 +77,7 @@ interface ResponseInterface {
     public function getError();
 
     /**
-     * Get Error As String
+     * Get Plain Error
      */
     public function getPlainError();
 
@@ -68,26 +95,6 @@ interface ResponseInterface {
      * Get Error Message
      */
     public function getErrorMessage();
-
-    /**
-     * Add Response Item
-     */
-    public function addItem($key, $value);
-
-    /**
-     * Get Response Item
-     */
-    public function getItem($key);
-
-    /**
-     * Set Callback
-     */
-    public function setCallback($callbackMethod = null, $callbackArguments = []);
-
-    /**
-     * Get Callback
-     */
-    public function getCallback();
 
     /**
      * Dump The PlainResponse Instance Data

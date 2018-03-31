@@ -1,6 +1,7 @@
 <?php
+
 namespace Clivern\Monkey\API\Contract;
-use Clivern\Monkey\API\DumpType;
+
 
 /**
  * API Request Interface

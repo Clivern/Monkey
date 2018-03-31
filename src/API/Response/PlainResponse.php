@@ -87,12 +87,14 @@ class PlainResponse implements ResponseInterface {
      * Set Error
      *
      * @param array $error the returned error
+     * @return PlainResponse
      */
     public function setError($error)
     {
         $this->error = $error;
-    }
 
+        return $this;
+    }
 
     /**
      * Add Response Item
@@ -186,7 +188,6 @@ class PlainResponse implements ResponseInterface {
     {
         return $this->callback;
     }
-
 
     /**
      * Get The Error

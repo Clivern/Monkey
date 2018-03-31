@@ -4,6 +4,7 @@ namespace Tests\API;
 use Clivern\Monkey\API\JobStatus;
 use PHPUnit\Framework\TestCase;
 
+
 /**
  * JobStatus Class Test
  *

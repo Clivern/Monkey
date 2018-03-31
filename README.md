@@ -1,5 +1,5 @@
 Monkey
-=================
+======
 
 Apache CloudStack SDK in PHP.
 
@@ -24,8 +24,41 @@ Usage
 
 After adding the package as a dependency, Please read the following steps:
 
+### Configure CloudStack Credentials
+
 ```php
-#!
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+	"api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+// OR
+
+$config = new Config([
+	"us_dc_clsk_01" => [
+		"api_url"   => "http://clsk_url.com:8080/client/api",
+	    "api_key"    => "api_key_here",
+	    "secret_key" => "secret_key_here"
+	]
+]);
+
+// To Check if CloudStack Server Credentials Exists
+$config->isCloudStackServerExists("us_dc_clsk_01"); // Return Boolean
+
+// To Get CloudStack Server Credentials
+$config->getCloudStackServer("us_dc_clsk_01"); // Return array & May be empty if not exist
+
+// To Get All CloudStack Servers Credentials
+$config->getCloudStackServers(); // Return Array
+
+// To Remove CloudStack Server
+$config->removeCloudStackServer("us_dc_clsk_01"); // Return Boolean
 ```
 
 

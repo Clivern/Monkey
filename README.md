@@ -581,7 +581,7 @@ if( $currentJob != null ){
 
 ### Monkey on Production
 
-Here i was trying to describe different usage cases of monkey but in case of production, we must have a database table(s) for our jobs and executer to run our jobs in background.
+Here I was trying to describe different usage cases of monkey but in case of production, we must have a database table(s) for our jobs and executer to run our jobs in background.
 
 We will need custom request classes for each specific command so we don't need to provide command data every time we create a request.
 
@@ -615,6 +615,11 @@ Misc
 
 Changelog
 ---------
+Version 1.0.1:
+```
+Add More Test Cases.
+```
+
 Version 1.0.0:
 ```
 Initial Release.

@@ -640,6 +640,11 @@ Misc
 
 Changelog
 ---------
+Version 1.0.2:
+```
+Force caller failure in callbacks in case of unexpected response.
+```
+
 Version 1.0.1:
 ```
 Add More Test Cases.

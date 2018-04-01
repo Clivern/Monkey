@@ -429,6 +429,15 @@ class TemplatesFilter
                 break;
             }
         }
+
+        if( empty($caller->getItem("templateid")) ){
+            $caller->setStatus(CallerStatus::$FAILED);
+            $caller->response()->setErrorCode("M200");
+            $caller->response()->setErrorMessage((isset($arguments['template_name']))
+                ? sprintf("Error! Can't find template with name: %s", $arguments['template_name'])
+                : "Error! Can't find any template."
+            );
+        }
     }
 }
 
@@ -444,13 +453,21 @@ class ServiceOfferingsFilter
             return false;
         }
         foreach ($response["listserviceofferingsresponse"]["serviceoffering"] as $serviceoffering) {
-            if(isset($arguments['template_name']) && ($serviceoffering['name'] == $arguments['serviceoffering_name'])) {
+            if(isset($arguments['serviceoffering_name']) && ($serviceoffering['name'] == $arguments['serviceoffering_name'])) {
                 $caller->addItem("serviceofferingid", $serviceoffering['id']);
                 break;
-            }elseif(!isset($arguments['template_name'])){
+            }elseif(!isset($arguments['serviceoffering_name'])){
                 $caller->addItem("serviceofferingid", $serviceoffering['id']);
                 break;
             }
+        }
+        if( empty($caller->getItem("serviceofferingid")) ){
+            $caller->setStatus(CallerStatus::$FAILED);
+            $caller->response()->setErrorCode("M200");
+            $caller->response()->setErrorMessage((isset($arguments['serviceoffering_name']))
+                ? sprintf("Error! Can't find service offering with name: %s", $arguments['serviceoffering_name'])
+                : "Error! Can't find any service offering."
+            );
         }
     }
 }
@@ -475,14 +492,22 @@ class ZoneFilter
                 break;
             }
         }
+        if( empty($caller->getItem("zoneid")) ){
+            $caller->setStatus(CallerStatus::$FAILED);
+            $caller->response()->setErrorCode("M200");
+            $caller->response()->setErrorMessage((isset($arguments['zone_name']))
+                ? sprintf("Error! Can't find zone with name: %s", $arguments['zone_name'])
+                : "Error! Can't find any zone."
+            );
+        }
     }
 }
 
 $config = new Config();
 $config->addCloudStackServer("us_dc_clsk_01", [
-    "api_url"   => "http://clsk_url.com:8080/client/api",
-    "api_key"    => "api_key_here",
-    "secret_key" => "secret_key_here"
+    "api_url"   => "http://159.89.45.203:8080/client/api",
+    "api_key"    => "RSB9O6bwGi64gjd0Xy4ow14LD3TNyyv6oX6WdBHtukJx5-MpLuXYYhQjj5x23nU2CyD_XQhdOa00NDDLRxVaSA",
+    "secret_key" => "Auqc9pS9G-QjmQVOoU7nvlSwIG_OtkLWD4iqp0lnS7H_pZpLs6M8iP8T9C4BMFEd4g4R8c2GCmBYkRFQbd5Fxw",
 ]);
 
 $request1 = new PlainRequest();
@@ -520,16 +545,16 @@ $request4 = new PlainRequest();
 $request4->setMethod(RequestMethod::$GET)
         ->setType(RequestType::$ASYNCHRONOUS)
         ->addParameter("command", "deployVirtualMachine")
-        ->addParameter("serviceofferingid", "@list_service_offering->serviceofferingid") // Here we use the ids with caller ident and item key
-        ->addParameter("templateid", "@list_templates->templateid") // Here we use the ids with caller ident and item key
-        ->addParameter("zoneid", "@list_zone->zoneid"); // Here we use the ids with caller ident and item key
+        ->addParameter("serviceofferingid", "@list_service_offering->serviceofferingid")
+        ->addParameter("templateid", "@list_templates->templateid")
+        ->addParameter("zoneid", "@list_zone->zoneid");
 
 $response4 = new PlainResponse();
 
 $caller4 = new Caller($request4, $response4, "deploy_virtual_machine", $config->getCloudStackServer("us_dc_clsk_01"));
 
 
-// Create a job with two callers and 4 default trials in case of failure
+// Create a job with four callers and 4 default trials in case of failure
 $job = new \Clivern\Monkey\API\Job([
     $caller1,
     $caller2,

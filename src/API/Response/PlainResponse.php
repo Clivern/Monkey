@@ -91,7 +91,33 @@ class PlainResponse implements ResponseInterface {
      */
     public function setError($error)
     {
-        $this->error = $error;
+        $this->error = array_merge($this->error, $error);
+
+        return $this;
+    }
+
+    /**
+     * Set Error Code
+     *
+     * @param integer $code
+     * @return PlainResponse
+     */
+    public function setErrorCode($code)
+    {
+        $this->error["code"] = $code;
+
+        return $this;
+    }
+
+    /**
+     * Set Error Message
+     *
+     * @param string $message
+     * @return PlainResponse
+     */
+    public function setErrorMessage($message)
+    {
+        $this->error["message"] = $message;
 
         return $this;
     }

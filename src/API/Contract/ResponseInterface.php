@@ -32,6 +32,16 @@ interface ResponseInterface {
     public function setError($error);
 
     /**
+     * Set Error Code
+     */
+    public function setErrorCode($code);
+
+    /**
+     * Set Error Message
+     */
+    public function setErrorMessage($message);
+
+    /**
      * Add Response Item
      */
     public function addItem($key, $value);

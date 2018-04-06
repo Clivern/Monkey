@@ -202,7 +202,7 @@ $caller = new Caller($request, $response, "stop_virtual_machine", $config->getCl
 
 
 // Create a job with one caller and 4 default trials in case of failure
-$job = new \Clivern\Monkey\API\Job([
+$job = new Job([
     $caller
 ], 4);
 
@@ -268,7 +268,7 @@ $caller = new Caller($request, $response, "start_virtual_machine", $config->getC
 
 
 // Create a job with one caller and 4 default trials in case of failure
-$job = new \Clivern\Monkey\API\Job([
+$job = new Job([
     $caller
 ], 4);
 
@@ -347,7 +347,7 @@ $caller2 = new Caller($request2, $response2, "start_virtual_machine", $config->g
 
 
 // Create a job with two callers and 4 default trials in case of failure
-$job = new \Clivern\Monkey\API\Job([
+$job = new Job([
     $caller1,
     $caller2
 ], 4);
@@ -555,7 +555,7 @@ $caller4 = new Caller($request4, $response4, "deploy_virtual_machine", $config->
 
 
 // Create a job with four callers and 4 default trials in case of failure
-$job = new \Clivern\Monkey\API\Job([
+$job = new Job([
     $caller1,
     $caller2,
     $caller3,
@@ -640,6 +640,11 @@ Misc
 
 Changelog
 ---------
+Version 1.0.3:
+```
+Docs Updated.
+```
+
 Version 1.0.2:
 ```
 Force caller failure in callbacks in case of unexpected response.

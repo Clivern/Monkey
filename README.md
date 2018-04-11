@@ -505,9 +505,9 @@ class ZoneFilter
 
 $config = new Config();
 $config->addCloudStackServer("us_dc_clsk_01", [
-    "api_url"   => "http://159.89.45.203:8080/client/api",
-    "api_key"    => "RSB9O6bwGi64gjd0Xy4ow14LD3TNyyv6oX6WdBHtukJx5-MpLuXYYhQjj5x23nU2CyD_XQhdOa00NDDLRxVaSA",
-    "secret_key" => "Auqc9pS9G-QjmQVOoU7nvlSwIG_OtkLWD4iqp0lnS7H_pZpLs6M8iP8T9C4BMFEd4g4R8c2GCmBYkRFQbd5Fxw",
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
 ]);
 
 $request1 = new PlainRequest();

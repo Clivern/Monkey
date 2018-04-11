@@ -640,6 +640,11 @@ Misc
 
 Changelog
 ---------
+Version 1.0.4:
+```
+Docs Updated.
+```
+
 Version 1.0.3:
 ```
 Docs Updated.

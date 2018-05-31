@@ -19,6 +19,33 @@ composer require clivern/monkey
 This command requires you to have Composer installed globally.
 
 
+CloudStack Simulator
+---------------------
+
+### Install Docker
+
+To install docker on Ubuntu.
+
+```bash
+$ apt-get update
+$ sudo apt install docker.io
+```
+
+Then ensure that it is enabled to start after reboot:
+
+```bash
+$ sudo systemctl enable docker
+```
+
+Then Run CloudStack Simulator.
+
+```bash
+$ docker pull cloudstack/simulator
+$ docker run --name simulator -p 8080:8080 -d cloudstack/simulator
+$ docker exec -ti simulator python /root/tools/marvin/marvin/deployDataCenter.py -i /root/setup/dev/basic.cfg
+```
+
+
 Usage
 -----
 
@@ -640,6 +667,11 @@ Misc
 
 Changelog
 ---------
+Version 1.0.5:
+```
+Docs Updated.
+```
+
 Version 1.0.4:
 ```
 Docs Updated.

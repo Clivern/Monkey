@@ -1,17 +1,19 @@
 <?php
 
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\API\Request;
 
-
 /**
- * Request Types
+ * Request Types.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\API\Request
  */
-class RequestType {
-
-    public static $ASYNCHRONOUS = "ASYNCHRONOUS";
-    public static $SYNCHRONOUS = "SYNCHRONOUS";
-
+class RequestType
+{
+    public static $ASYNCHRONOUS = 'ASYNCHRONOUS';
+    public static $SYNCHRONOUS = 'SYNCHRONOUS';
 }

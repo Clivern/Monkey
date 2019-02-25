@@ -1,20 +1,25 @@
 <?php
+
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Tests\API\Request;
 
-use PHPUnit\Framework\TestCase;
 use Clivern\Monkey\API\Request\ContentType;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Content Type Class Test
+ * Content Type Class Test.
  *
  * @since 1.0.0
- * @package Tests\API\Request
  */
-class ContentTypeTest extends TestCase {
-
+class ContentTypeTest extends TestCase
+{
     public function testClass()
     {
-        $this->assertEquals("Clivern\Monkey\API\Request\ContentType", get_class(new ContentType()));
-        $this->assertEquals("application/json", ContentType::$JSON);
+        $this->assertSame("Clivern\Monkey\API\Request\ContentType", \get_class(new ContentType()));
+        $this->assertSame('application/json', ContentType::$JSON);
     }
 }

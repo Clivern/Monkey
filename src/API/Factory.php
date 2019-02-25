@@ -1,23 +1,24 @@
 <?php
 
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\API;
 
-use Clivern\Monkey\API\Job;
-use Clivern\Monkey\API\Caller;
 use Clivern\Monkey\API\Request\PlainRequest;
 use Clivern\Monkey\API\Response\PlainResponse;
 
-
 /**
- * CloudStack API Factory Class
+ * CloudStack API Factory Class.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\API
  */
-class Factory {
-
+class Factory
+{
     /**
-     * Get an Instance Of Caller
+     * Get an Instance Of Caller.
      *
      * @return Caller
      */
@@ -30,7 +31,7 @@ class Factory {
     }
 
     /**
-     * Get an Instance of Job
+     * Get an Instance of Job.
      *
      * @return Job
      */

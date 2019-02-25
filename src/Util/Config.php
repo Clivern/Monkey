@@ -1,18 +1,23 @@
 <?php
+
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\Util;
 
 /**
- * Config Class
+ * Config Class.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\Util
  */
-class Config {
-
+class Config
+{
     private $cloudStackServers = [];
 
     /**
-     * Class Constructor
+     * Class Constructor.
      *
      * @param array $cloudStackServers A List of CloudStack Servers, Credentials and More Info
      */
@@ -22,10 +27,11 @@ class Config {
     }
 
     /**
-     * Add CloudStack Server
+     * Add CloudStack Server.
      *
-     * @param  string $serverIdent       CloudStack Server Ident
-     * @param  array  $serverCredentials  CloudStack Server Credentials
+     * @param string $serverIdent       CloudStack Server Ident
+     * @param array  $serverCredentials CloudStack Server Credentials
+     *
      * @return Config An instance of Config Class
      */
     public function addCloudStackServer($serverIdent, $serverCredentials)
@@ -36,14 +42,15 @@ class Config {
     }
 
     /**
-     * Remove CloudStack Server
+     * Remove CloudStack Server.
      *
-     * @param  string  $serverIdent The CloudStack Server Ident
-     * @return boolean Whether node removed or not
+     * @param string $serverIdent The CloudStack Server Ident
+     *
+     * @return bool Whether node removed or not
      */
     public function removeCloudStackServer($serverIdent)
     {
-        if( isset($this->cloudStackServers[$serverIdent]) ){
+        if (isset($this->cloudStackServers[$serverIdent])) {
             unset($this->cloudStackServers[$serverIdent]);
         }
 
@@ -51,7 +58,7 @@ class Config {
     }
 
     /**
-     * Get All CloudStack Servers
+     * Get All CloudStack Servers.
      *
      * @return array A list of CloudStack Servers
      */
@@ -61,10 +68,11 @@ class Config {
     }
 
     /**
-     * Check if Server Exist
+     * Check if Server Exist.
      *
-     * @param  String  $serverIdent The Server Ident
-     * @return boolean  Whether Server Exist or Not
+     * @param string $serverIdent The Server Ident
+     *
+     * @return bool Whether Server Exist or Not
      */
     public function isCloudStackServerExists($serverIdent)
     {
@@ -72,9 +80,10 @@ class Config {
     }
 
     /**
-     * Get CloudStack Server Info
+     * Get CloudStack Server Info.
      *
-     * @param  String $serverIdent The Server Ident
+     * @param string $serverIdent The Server Ident
+     *
      * @return array The Server Info
      */
     public function getCloudStackServer($serverIdent)

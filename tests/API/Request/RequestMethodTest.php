@@ -1,23 +1,28 @@
 <?php
+
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Tests\API\Request;
 
-use PHPUnit\Framework\TestCase;
 use Clivern\Monkey\API\Request\RequestMethod;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Request Method Class Test
+ * Request Method Class Test.
  *
  * @since 1.0.0
- * @package Tests\API\Request
  */
-class RequestMethodTest extends TestCase {
-
+class RequestMethodTest extends TestCase
+{
     public function testClass()
     {
-        $this->assertEquals("Clivern\Monkey\API\Request\RequestMethod", get_class(new RequestMethod()));
-        $this->assertEquals("GET", RequestMethod::$GET);
-        $this->assertEquals("POST", RequestMethod::$POST);
-        $this->assertEquals("PUT", RequestMethod::$PUT);
-        $this->assertEquals("DELETE", RequestMethod::$DELETE);
+        $this->assertSame("Clivern\Monkey\API\Request\RequestMethod", \get_class(new RequestMethod()));
+        $this->assertSame('GET', RequestMethod::$GET);
+        $this->assertSame('POST', RequestMethod::$POST);
+        $this->assertSame('PUT', RequestMethod::$PUT);
+        $this->assertSame('DELETE', RequestMethod::$DELETE);
     }
 }

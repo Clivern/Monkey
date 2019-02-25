@@ -1,113 +1,150 @@
 <?php
 
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\API\Contract;
 
-
 /**
- * API Request Interface
+ * API Request Interface.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\API\Contract
  */
-interface RequestInterface {
-
+interface RequestInterface
+{
     /**
-     * Set Method
+     * Set Method.
+     *
+     * @param mixed $method
      */
     public function setMethod($method);
 
     /**
-     * Set Type
+     * Set Type.
+     *
+     * @param mixed $type
      */
     public function setType($type);
 
     /**
-     * Add URL Parameter
+     * Add URL Parameter.
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function addParameter($key, $value);
 
     /**
-     * Add Request Body Item
+     * Add Request Body Item.
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function addItem($key, $value);
 
     /**
-     * Add Header Item
+     * Add Header Item.
+     *
+     * @param mixed $key
+     * @param mixed $value
      */
     public function addHeader($key, $value);
 
     /**
-     * Get Request Method
+     * Get Request Method.
      */
     public function getMethod();
 
     /**
-     * Get Request Type
+     * Get Request Type.
      */
     public function getType();
 
     /**
-     * Get Request URL Parameter
+     * Get Request URL Parameter.
+     *
+     * @param mixed $key
      */
     public function getParameter($key);
 
     /**
-     * Get Request Body Item
+     * Get Request Body Item.
+     *
+     * @param mixed $key
      */
     public function getItem($key);
 
     /**
-     * Get Request Body Items
+     * Get Request Body Items.
+     *
+     * @param mixed $type
      */
     public function getItems($type);
 
     /**
-     * Get Request Body
+     * Get Request Body.
+     *
+     * @param mixed $type
      */
     public function getBody($type);
 
     /**
-     * Get Request Header Item
+     * Get Request Header Item.
+     *
+     * @param mixed $key
      */
     public function getHeader($key);
 
     /**
-     * Get Headers
+     * Get Headers.
      */
     public function getHeaders();
 
     /**
-     * Get Parameters
+     * Get Parameters.
      */
     public function getParameters();
 
     /**
-     * Check if Header Item Exists
+     * Check if Header Item Exists.
+     *
+     * @param mixed $key
      */
     public function headerExists($key);
 
     /**
-     * Check if URL Parameter Exists
+     * Check if URL Parameter Exists.
+     *
+     * @param mixed $key
      */
     public function parameterExists($key);
 
     /**
-     * Check if Body Item Exists
+     * Check if Body Item Exists.
+     *
+     * @param mixed $key
      */
     public function itemExists($key);
 
     /**
-     * Debug The Request Object
+     * Debug The Request Object.
      */
     public function debug();
 
     /**
-     * Dump The PlainRequest Instance Data
+     * Dump The PlainRequest Instance Data.
+     *
+     * @param mixed $type
      */
     public function dump($type);
 
     /**
-     * Reload The PlainRequest Instance Data
+     * Reload The PlainRequest Instance Data.
+     *
+     * @param mixed $data
+     * @param mixed $type
      */
     public function reload($data, $type);
 }

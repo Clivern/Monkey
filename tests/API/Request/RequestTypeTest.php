@@ -1,21 +1,26 @@
 <?php
+
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Tests\API\Request;
 
-use PHPUnit\Framework\TestCase;
 use Clivern\Monkey\API\Request\RequestType;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Request Type Class Test
+ * Request Type Class Test.
  *
  * @since 1.0.0
- * @package Tests\API\Request
  */
-class RequestTypeTest extends TestCase {
-
+class RequestTypeTest extends TestCase
+{
     public function testClass()
     {
-        $this->assertEquals("Clivern\Monkey\API\Request\RequestType", get_class(new RequestType()));
-        $this->assertEquals("ASYNCHRONOUS", RequestType::$ASYNCHRONOUS);
-        $this->assertEquals("SYNCHRONOUS", RequestType::$SYNCHRONOUS);
+        $this->assertSame("Clivern\Monkey\API\Request\RequestType", \get_class(new RequestType()));
+        $this->assertSame('ASYNCHRONOUS', RequestType::$ASYNCHRONOUS);
+        $this->assertSame('SYNCHRONOUS', RequestType::$SYNCHRONOUS);
     }
 }

@@ -1,29 +1,30 @@
 <?php
 
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\API\Request;
 
-use Clivern\Monkey\API\DumpType;
-use Clivern\Monkey\API\Request\ResponseType;
 use Clivern\Monkey\API\Contract\RequestInterface;
-
+use Clivern\Monkey\API\DumpType;
 
 /**
- * Plain Request Class
+ * Plain Request Class.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\API\Request
  */
-class PlainRequest implements RequestInterface {
-
+class PlainRequest implements RequestInterface
+{
     protected $type;
     protected $method;
     protected $parameters = [];
     protected $items = [];
     protected $headers = [];
 
-
     /**
-     * Class Constructor
+     * Class Constructor.
      *
      * @param string $method     The Request Method
      * @param string $type       The Request Type
@@ -41,9 +42,10 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Set Method
+     * Set Method.
      *
      * @param string $method The Request Method
+     *
      * @return PlainRequest An instance of this class
      */
     public function setMethod($method)
@@ -54,9 +56,10 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Set Type
+     * Set Type.
      *
      * @param string $type The Request Type
+     *
      * @return PlainRequest An instance of this class
      */
     public function setType($type)
@@ -67,10 +70,11 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Add URL Parameter
+     * Add URL Parameter.
      *
      * @param string $key   The Parameter Key
      * @param string $value The Parameter Value
+     *
      * @return PlainRequest An instance of this class
      */
     public function addParameter($key, $value)
@@ -81,10 +85,11 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Add Request Body Item
+     * Add Request Body Item.
      *
-     * @param string $key  The Body Item Key
-     * @param mixed $value The Body Item Value
+     * @param string $key   The Body Item Key
+     * @param mixed  $value The Body Item Value
+     *
      * @return PlainRequest An instance of this class
      */
     public function addItem($key, $value)
@@ -95,10 +100,11 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Add Header Item
+     * Add Header Item.
      *
      * @param string $key   The Header Item Key
      * @param string $value The Header Item Value
+     *
      * @return PlainRequest An instance of this class
      */
     public function addHeader($key, $value)
@@ -109,7 +115,7 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Request Method
+     * Get Request Method.
      *
      * @return string
      */
@@ -119,7 +125,7 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Request Type
+     * Get Request Type.
      *
      * @return string
      */
@@ -129,9 +135,10 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Request URL Parameter
+     * Get Request URL Parameter.
      *
-     * @param string $key   The Parameter Key
+     * @param string $key The Parameter Key
+     *
      * @return array
      */
     public function getParameter($key)
@@ -140,9 +147,10 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Request Body Item
+     * Get Request Body Item.
      *
-     * @param string $key  The Body Item Key
+     * @param string $key The Body Item Key
+     *
      * @return mixed
      */
     public function getItem($key)
@@ -151,39 +159,42 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Request Body Items
+     * Get Request Body Items.
      *
-     * @param  string $type The Items Format (Json or Array)
+     * @param string $type The Items Format (Json or Array)
+     *
      * @return mixed
      */
     public function getItems($type)
     {
-        if( $type == DumpType::$JSON ){
+        if ($type === DumpType::$JSON) {
             return json_encode($this->items);
-        }else{
-            return $this->items;
         }
+
+        return $this->items;
     }
 
     /**
-     * Get Request Body
+     * Get Request Body.
      *
-     * @param  string $type The Body Format (Json or Array)
+     * @param string $type The Body Format (Json or Array)
+     *
      * @return mixed
      */
     public function getBody($type)
     {
-        if( $type == DumpType::$JSON ){
+        if ($type === DumpType::$JSON) {
             return json_encode($this->items);
-        }else{
-            return $this->items;
         }
+
+        return $this->items;
     }
 
     /**
-     * Get Request Header Item
+     * Get Request Header Item.
      *
-     * @param string $key   The Header Item Key
+     * @param string $key The Header Item Key
+     *
      * @return array
      */
     public function getHeader($key)
@@ -192,7 +203,7 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Headers
+     * Get Headers.
      *
      * @return array
      */
@@ -202,54 +213,57 @@ class PlainRequest implements RequestInterface {
     }
 
     /**
-     * Get Parameters
+     * Get Parameters.
      *
      * @return array
      */
     public function getParameters()
     {
-        if( !isset($this->parameters["response"]) ){
-            $this->parameters["response"] = ResponseType::$JSON;
+        if (!isset($this->parameters['response'])) {
+            $this->parameters['response'] = ResponseType::$JSON;
         }
 
         return $this->parameters;
     }
 
     /**
-     * Check if Header Item Exists
+     * Check if Header Item Exists.
      *
-     * @param  string $key The Header Item Key
-     * @return boolean
+     * @param string $key The Header Item Key
+     *
+     * @return bool
      */
     public function headerExists($key)
     {
-        return (isset($this->headers[$key]));
+        return isset($this->headers[$key]);
     }
 
     /**
-     * Check if URL Parameter Exists
+     * Check if URL Parameter Exists.
      *
-     * @param  string $key The URL Parameter Key
-     * @return boolean
+     * @param string $key The URL Parameter Key
+     *
+     * @return bool
      */
     public function parameterExists($key)
     {
-        return (isset($this->parameters[$key]));
+        return isset($this->parameters[$key]);
     }
 
     /**
-     * Check if Body Item Exists
+     * Check if Body Item Exists.
      *
-     * @param  string $key The Body Item Key
-     * @return boolean
+     * @param string $key The Body Item Key
+     *
+     * @return bool
      */
     public function itemExists($key)
     {
-        return (isset($this->items[$key]));
+        return isset($this->items[$key]);
     }
 
     /**
-     * Debug The Request Object
+     * Debug The Request Object.
      *
      * @return string
      */
@@ -258,49 +272,52 @@ class PlainRequest implements RequestInterface {
         $body = json_encode($this->items);
         $query = http_build_query($this->parameters);
         $query = urldecode($query);
-        $query = str_replace("+", "%20", $query);
-        $url = "https://example.com?" . $query;
-        $headers = "";
+        $query = str_replace('+', '%20', $query);
+        $url = 'https://example.com?'.$query;
+        $headers = '';
         foreach ($this->headers as $key => $value) {
             $headers .= " -H \"{$key}: {$value}\"";
         }
 
-        return "curl -X {$this->method} " . trim($headers) . " -d '{$body}'" . " \"{$url}\"";
+        return "curl -X {$this->method} ".trim($headers)." -d '{$body}'"." \"{$url}\"";
     }
 
     /**
-     * Dump The PlainRequest Instance Data
+     * Dump The PlainRequest Instance Data.
      *
-     * @param  string $type the type of data
+     * @param string $type the type of data
+     *
      * @return mixed
      */
     public function dump($type)
     {
         $data = [
-            "method" => $this->method,
-            "parameters" => $this->parameters,
-            "items" => $this->items,
-            "headers" => $this->headers,
-            "type" => $this->type
+            'method' => $this->method,
+            'parameters' => $this->parameters,
+            'items' => $this->items,
+            'headers' => $this->headers,
+            'type' => $this->type,
         ];
-        return ($type == DumpType::$JSON) ? json_encode($data) : $data;
+
+        return ($type === DumpType::$JSON) ? json_encode($data) : $data;
     }
 
     /**
-     * Reload The PlainRequest Instance Data
+     * Reload The PlainRequest Instance Data.
      *
-     * @param  mixed  $data The PlainRequest Instance Data
-     * @param  string $type the type of data
+     * @param mixed  $data The PlainRequest Instance Data
+     * @param string $type the type of data
+     *
      * @return PlainRequest
      */
     public function reload($data, $type)
     {
-        $data = ($type == DumpType::$JSON) ? json_decode($data, true) : $data;
-        $this->method = $data["method"];
-        $this->parameters = $data["parameters"];
-        $this->items = $data["items"];
-        $this->headers = $data["headers"];
-        $this->type = $data["type"];
+        $data = ($type === DumpType::$JSON) ? json_decode($data, true) : $data;
+        $this->method = $data['method'];
+        $this->parameters = $data['parameters'];
+        $this->items = $data['items'];
+        $this->headers = $data['headers'];
+        $this->type = $data['type'];
 
         return $this;
     }

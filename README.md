@@ -667,6 +667,12 @@ Misc
 
 Changelog
 ---------
+Version 1.0.6:
+```
+Enhance code style.
+Automate code fixes and linting.
+```
+
 Version 1.0.5:
 ```
 Docs Updated.

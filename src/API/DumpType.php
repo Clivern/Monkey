@@ -1,17 +1,19 @@
 <?php
 
+/*
+ * This file is part of Monkey - Apache CloudStack SDK
+ * (c) Clivern <hello@clivern.com>
+ */
+
 namespace Clivern\Monkey\API;
 
-
 /**
- * Dump Types Class
+ * Dump Types Class.
  *
  * @since 1.0.0
- * @package Clivern\Monkey\API
  */
-class DumpType {
-
-    public static $ARRAY = "ARRAY";
-    public static $JSON = "JSON";
-
+class DumpType
+{
+    public static $ARRAY = 'ARRAY';
+    public static $JSON = 'JSON';
 }

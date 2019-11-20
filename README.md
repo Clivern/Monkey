@@ -661,6 +661,87 @@ class CreateUser extends PlainResponse implements ResponseInterface {
 
 Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job. Finally i created a [repository to share these ideas and how to apply them in symfony framework but for sure it can be applied to other frameworks](https://github.com/Clivern/Koba). I named it [Koba](https://github.com/Clivern/Koba) like the Monkey from [Dawn of the Planet of the Apes](https://nl.wikipedia.org/wiki/Dawn_of_the_Planet_of_the_Apes) :grin:
 
+### Usage as Command Line Tool
+
+Create an executable file `run`
+```bash
+$ touch run
+$ chmod u+x run
+```
+
+```php
+#!/usr/bin/env php
+<?php
+
+include_once dirname(__FILE__) . '/vendor/autoload.php';
+
+use Clivern\Monkey\Util\Config;
+use Clivern\Monkey\API\Request\PlainRequest;
+use Clivern\Monkey\API\Response\PlainResponse;
+use Clivern\Monkey\API\Request\RequestMethod;
+use Clivern\Monkey\API\Request\RequestType;
+use Clivern\Monkey\API\Caller;
+
+$platform = false;
+
+foreach ($argv as $value) {
+    if(strpos($value, "platform=") !== false){
+        $platform = str_replace("platform=", "", $value);
+    }
+}
+
+$command = false;
+
+foreach ($argv as $value) {
+    if(strpos($value, "command=") !== false){
+        $command = str_replace("command=", "", $value);
+    }
+}
+
+if(empty($command) || empty($platform)){
+    die("Please Provide Command and The Platform ID");
+}
+
+$config = new Config();
+$config->addCloudStackServer("us_dc_clsk_01", [
+    "api_url"   => "http://clsk_url.com:8080/client/api",
+    "api_key"    => "api_key_here",
+    "secret_key" => "secret_key_here"
+]);
+
+
+$request = new PlainRequest();
+$request->setMethod(RequestMethod::$GET)
+        ->setType(RequestType::$SYNCHRONOUS)
+        ->addParameter("command", $command);
+
+
+foreach ($argv as $value) {
+    if((strpos($value, "command=") === false) && (strpos($value, "platform=") === false) && strpos($value, "=")){
+        $parameter = explode("=", $value);
+        $request->addParameter($parameter[0], $parameter[1]);
+    }
+}
+
+// Create response object without callbacks
+$response = new PlainResponse();
+
+// Create a caller object with the request and response and ident
+$caller = new Caller($request, $response, $command, $config->getCloudStackServer($platform));
+
+// Run the call
+$caller->execute();
+
+$data = $caller->response()->getResponse();
+
+echo json_encode($data);
+```
+
+```
+$ ./run platform=us_dc_clsk_01 command=$$ arg=$$
+$ ./run platform=us_dc_clsk_01 command=$$ arg=$$ | python -m json.tool
+```
+
 
 Misc
 ====

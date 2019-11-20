@@ -450,9 +450,7 @@ class Caller
         $parameters = $this->request->getParameters();
 
         if ($this->apiData['sso_enabled'] && empty($this->apiData['sso_key'])) {
-            throw new \InvalidArgumentException(
-                'Required options not defined: sso_key'
-            );
+            throw new \InvalidArgumentException('Required options not defined: sso_key');
         }
         ksort($parameters);
 
@@ -488,9 +486,7 @@ class Caller
         ];
 
         if ($this->apiData['sso_enabled'] && empty($this->apiData['sso_key'])) {
-            throw new \InvalidArgumentException(
-                'Required options not defined: sso_key'
-            );
+            throw new \InvalidArgumentException('Required options not defined: sso_key');
         }
 
         ksort($parameters);

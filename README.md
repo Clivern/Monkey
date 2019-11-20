@@ -13,7 +13,7 @@ Installation
 To install the package via `composer`, use the following:
 
 ```php
-composer require clivern/monkey
+$ composer require clivern/monkey
 ```
 
 This command requires you to have Composer installed globally.

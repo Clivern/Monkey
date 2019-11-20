@@ -659,7 +659,7 @@ class CreateUser extends PlainResponse implements ResponseInterface {
 }
 ```
 
-Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job. Finally i created a [repository to share these ideas and how to apply them in symfony framework but for sure it can be applied to other frameworks](https://github.com/Clivern/Koba). I named it [Koba](https://github.com/Clivern/Koba) like the Monkey from [Dawn of the Planet of the Apes](https://nl.wikipedia.org/wiki/Dawn_of_the_Planet_of_the_Apes) :grin:
+Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job. 
 
 ### Usage as Command Line Tool
 

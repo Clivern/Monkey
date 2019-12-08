@@ -50,7 +50,11 @@ coverage: composer
 	vendor/bin/phpunit -c .
 
 
-ci: composer lint test
+outdated:
+	$(COMPOSER) outdated
+
+
+ci: composer lint test outdated
 	@echo "All quality checks passed"
 
 

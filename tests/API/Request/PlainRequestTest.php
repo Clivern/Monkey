@@ -29,6 +29,7 @@ class PlainRequestTest extends TestCase
      */
     public function __construct()
     {
+        parent::__construct();
         $this->request = new PlainRequest();
         $this->request->setMethod(RequestMethod::$GET)
                 ->setType(RequestType::$ASYNCHRONOUS)

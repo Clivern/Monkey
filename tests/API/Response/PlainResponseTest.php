@@ -25,6 +25,7 @@ class PlainResponseTest extends TestCase
      */
     public function __construct()
     {
+        parent::__construct();
         $this->response = new PlainResponse("\Clivern::Method", ['key' => 'value']);
     }
 

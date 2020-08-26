@@ -659,7 +659,7 @@ class CreateUser extends PlainResponse implements ResponseInterface {
 }
 ```
 
-Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job. 
+Also build our response callbacks for calls so when we use it, we will be sure that these data will be available for other callers within the job.
 
 ### Usage as Command Line Tool
 
@@ -748,6 +748,11 @@ Misc
 
 Changelog
 ---------
+Version 1.1.0:
+```
+Update dependencies.
+```
+
 Version 1.0.6:
 ```
 Enhance code style.

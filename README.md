@@ -75,6 +75,17 @@ $config = new Config([
     ]
 ]);
 
+// To use self-signed or invalid SSL for connecting to CloudStack
+
+$config = new Config([
+    "us_dc_clsk_01" => [
+        "api_url"   => "https://clsk_url.com:8443/client/api",
+        "api_key"    => "api_key_here",
+        "secret_key" => "secret_key_here",
+        "verify_ssl" => false
+    ]
+]);
+
 // To Check if CloudStack Server Credentials Exists
 $config->isCloudStackServerExists("us_dc_clsk_01"); // Return Boolean
 

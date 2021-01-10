@@ -32,6 +32,7 @@ class Caller
         'secret_key' => '',
         'sso_enabled' => false,
         'sso_key' => '',
+        'verify_ssl' => true,
     ];
 
     /**
@@ -52,7 +53,7 @@ class Caller
         $this->request = $request;
         $this->response = $response;
         $this->apiData = array_merge($this->apiData, $apiData);
-        $this->client = new Client();
+        $this->client = new Client(['verify' => $this->apiData['verify_ssl']]);
         $this->request->addParameter('apiKey', (isset($apiData['api_key'])) ? $apiData['api_key'] : '');
         $this->status = CallerStatus::$PENDING;
     }

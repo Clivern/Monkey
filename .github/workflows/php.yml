@@ -1,0 +1,21 @@
+name: Build
+
+on: [push]
+
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-18.04 ]
+        php: ['7.2', '7.3', '7.4']
+
+    name: PHP ${{ matrix.php }} sample
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup PHP
+        uses: nanasess/setup-php@master
+        with:
+          php-version: ${{ matrix.php }}
+      - run: make ci

@@ -3,9 +3,10 @@ Monkey
 
 Apache CloudStack SDK in PHP.
 
-[![Build Status](https://travis-ci.org/Clivern/Monkey.svg?branch=master)](https://travis-ci.org/Clivern/Monkey)
+[![Build Status](https://github.com/Clivern/Monkey/workflows/Build/badge.svg)](https://github.com/Clivern/Monkey/actions)
 [![License](https://poser.pugx.org/clivern/monkey/license.svg)](https://packagist.org/packages/clivern/monkey)
 [![Latest Stable Version](https://poser.pugx.org/clivern/monkey/v/stable.svg)](https://packagist.org/packages/clivern/monkey)
+
 
 Installation
 ------------
